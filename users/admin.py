@@ -5,3 +5,5 @@ from .models import User, EmployeeProfile, EmployerProfile
 # Register your models here.
 
 admin.site.register(User)
+admin.site.register(EmployeeProfile)
+admin.site.register(EmployerProfile)

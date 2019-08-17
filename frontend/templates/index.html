@@ -7,12 +7,14 @@
   <section sex-login>
     <div login-container> 
       <div login-form>
-          <form login method="post" action="/home/login/">{% csrf_token %}
+          <form login>{% csrf_token %}
             <input type="text"  id="login" name="email_address" placeholder="Email Address">
             <input type="text" id="password" name="password" placeholder="Password">
-            <input login-button type="submit" value="Login">
           </form>
       </div>  
+      <div login-button>
+          <button > Login </button>
+      </div>   
       </div>
   </section>
 </div>

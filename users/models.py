@@ -63,6 +63,8 @@ class User(AbstractUser):
     is_employee = models.BooleanField('Employee', default=False)
     is_employer = models.BooleanField('Employer', default=False)
     slug = models.SlugField(unique=True)
+    contact_number = PhoneNumberField(_('Contact Phone Number'),blank=True, null=True)
+    creation_date = models.DateTimeField(default=datetime.datetime.now)
                 
 
     username = None
@@ -80,12 +82,11 @@ class EmployeeProfile(models.Model):
     user = models.OneToOneField(
         User, related_name='employeeprofile', on_delete=models.CASCADE)
     slug = models.SlugField(max_length=40, unique=True)
-    contact_number = PhoneNumberField(_('Contact Phone Number'),blank=True, null=True)
-    created_by = models.ForeignKey('EmployerProfile', on_delete=models.CASCADE)
+    
+    
 
     def get_absolute_url(self):
-        return reverse('employee_profile', kwargs={'slug': self.slug})
-    
+        return reverse('employee_profile', kwargs={'slug': self.slug})    
 
     #string represantation of the model
     def __str__(self):
@@ -97,16 +98,13 @@ class EmployerProfile(models.Model):
     '''
     user = models.OneToOneField(
         User, related_name='employerprofile', on_delete=models.CASCADE)
-    contact_number = PhoneNumberField(_('Contact Phone Number'),blank=True, null=True)
     position = models.CharField(
         _('What is your position in the company'), max_length=40, default='')
-    creation_date = models.DateTimeField(default=datetime.datetime.now)
     slug = models.SlugField(max_length=40, unique=True)
     number_of_employees = models.IntegerField()
 
     def get_absolute_url(self):
-        return reverse('employer_profile', kwargs={'slug': self.slug})
-    
+        return reverse('employer_profile', kwargs={'slug': self.slug})    
 
     #string representation of the model
     def __str__(self):

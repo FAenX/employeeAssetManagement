@@ -28,7 +28,9 @@ class EmployerDashboardView(TemplateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         employees = User.objects.filter(is_employee=True)
+        assets = Asset.objects.all()
         context['employees'] = employees
+        context['assets'] = assets
         return context
 
 
@@ -61,11 +63,11 @@ class SignUpView(View):
         data = json.loads(self.request.body)
         print(data)
 
-        #try:
-        user = User.objects.create_user(email=data['email'], password=data['password'], 
-                                        first_name=data['first_name'], last_name=data['last_name'], 
-                                        is_employee = True)
-        return HttpResponse(200)
-        # except Exception as e:
-        #     print(e.message)
-        #     return HttpResponse(418)
+        try:
+            user = User.objects.create_user(email=data['email'], password=data['password'], 
+                                            first_name=data['first_name'], last_name=data['last_name'], 
+                                            is_employee = True)
+            return HttpResponse(200)
+        except Exception as e:
+            print(e.message)
+            return HttpResponse(418)

@@ -1,9 +1,33 @@
+//view all assets
+const toogleAssetsEmployees =()=>{
+    const assetsAll = document.querySelector('[assets-all-container]');
+    const employerData = document.querySelector('[employer-data]');
+    const adminNav = document.querySelector('[admin-nav]');
+
+    assetsAll.style.display='inline-block';
+    employerData.style.opacity ='.3';
+    adminNav.style.opacity='.3'
+};
+
+const toogleEmployeesAssets = ()=>{
+    const assetsAll = document.querySelector('[assets-all-container]');
+    const employerData = document.querySelector('[employer-data]');
+    const form = document.querySelector('[add-employee-form]');
+    const adminNav = document.querySelector('[admin-nav]');
+    employerData.style.opacity ='1';
+    adminNav.style.opacity='1'
+    assetsAll.style.display='none';
+    employerData.style.display = 'block';
+    form.style.display = 'none';
+
+};
+
 //hide div given field
 const showHideDivs =()=>{
     const toHide = document.querySelector('[employer-data]');
     const toShow = document.querySelector('[add-employee-form]');
     toShow.style.display='block';  
-    toHide.style.display='none';
+    toHide.style.opacity='.3';
 };
 
 //hide div given field
@@ -13,6 +37,7 @@ const hideShowDivs =()=>{
     toShow.style.display='block';  
     toHide.style.display='none';
 };
+
 
 //sign up data
 const createEmployee =()=>{
@@ -71,14 +96,20 @@ const postData = (url, data, csrfToken) =>{
     
 
 // start app
-closeCreateUser = document.querySelector('[close-btn]');
+closeBtn = document.querySelectorAll('.close-btn');
 loginBtn = document.querySelector('[login-button]');
 addEmpBtn = document.querySelector('[add-employee-button]');
 createEmployeeBtn = document.querySelector('[create-employee-button]');
+viewAllAssetsBtn = document.querySelector('[view-all-assets]');
 
 
 addEmpBtn.addEventListener('click', showHideDivs);
 //loginBtn.addEventListener('click', login);
 createEmployeeBtn.addEventListener('click', createEmployee);
-closeCreateUser.addEventListener('click', hideShowDivs);
+viewAllAssetsBtn.addEventListener('click', toogleAssetsEmployees);
+
+closeBtn.forEach(element => {
+    return element.addEventListener('click', toogleEmployeesAssets);
+    
+});
 

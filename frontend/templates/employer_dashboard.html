@@ -6,7 +6,7 @@
 
 <div profile-container>
     <div admin-nav>
-        <div profile-picture>
+        <div class="p-picture">
             <img src="/static/desktop.jpg"/>
         </div>
         <div class="user-info">
@@ -18,7 +18,7 @@
         </div>  
         <div admin-nav-item>
             <p add-employee-button class="button">add employee</p> 
-            <p class="button"> view all assets </p>           
+            <p view-all-assets class="button"> view all assets </p>           
         </div>         
     </div>
     <div employer-data>
@@ -46,7 +46,7 @@
 </div>
 
 <div add-employee-form>
-    <span close-btn>&times;</span>
+    <span class="close-btn">&times;</span>
     <h3> Create Employee</h3>
     <form create-employee-form>{% csrf_token %}
         <label for="email_address"> Email Address</label>
@@ -64,7 +64,25 @@
     <div create-employee-button>
         <button class="button">Create Employee</button>
     </div>
-</div>        
+</div>  
+<div assets-all-container>
+    <span class="close-btn">&times;</span>
+    <h3> Company Assets</h3>
+    {% for asset in assets %}
+    <div asset>
+        <div class="p-picture">
+            <img src="/static/mouse.jpg"/>
+        </div>
+        <div class="asset-info">
+            <div class="u-info">
+                <p class="u-info-item">info</p>
+                <p class="u-info-item">item3</p>
+            </div>
+        </div>  
+
+    </div>
+    {% endfor %}
+</div>      
 
 
 

@@ -1,0 +1,66 @@
+{% extends 'base.html' %}
+{% block title %} Employee and Asset Management {% endblock %}
+{% load static %}
+{% block content %}
+
+
+<div profile-container>
+    <div admin-nav>
+        <div profile-picture>
+            <img src="/static/desktop.jpg"/>
+        </div>
+        <div class="user-info">
+            <div class="u-info">
+                <p class="u-info-item">item1</p>
+                <p class="u-info-item">item2</p>
+                <p class="u-info-item">item3</p>
+            </div>
+        </div>  
+        <div admin-nav-item>
+            <p class="admin-nav-item"> link1</p> 
+            <p class="admin-nav-item"> link2 </p>           
+        </div>         
+    </div>
+    <div employer-data>
+        <div employee-list>
+            <div employee>
+                <div employee-info>
+                    <div employee-profile-picture>
+                        <img src="/static/desktop.jpg"/>
+                    </div>
+                    <div class="user-info">
+                        <div class="u-info">
+                            <p class="u-info-item">{{ user }}</p>
+                            <p class="u-info-item">item2</p>
+                            <p class="u-info-item">item3</p>
+                        </div>
+                    </div>  
+                </div>
+            </div>
+        </div>
+        <div add-employee-form style="display: none;">
+            <form create-employee-form action="/home/signup/" method="post">{% csrf_token %}
+                <label for="email_address"> Email Address</label>
+                <input class="create-employee-form" id="email_address" name="email_address" type="text" placeholder="Email Address" required/><br>
+                <label for='first_name'>First Name:</label>
+                <input class="create-employee-form" id="first_name" name="first_name" type="text" placeholder="First Name" required/><br>
+                <label for='last_name'>Last Name:</label>
+                <input class="create-employee-form" id="last_name" name="last_name" type="text" placeholder="Last Name" required/><br>
+                <label for="raw_password"> Password </label>
+                <input class="create-employee-form" id="raw_password" name="raw_password" type="text" placeholder="Password" required/></br>
+                <label for="password1">Re-enter Password</label>
+                <input class="create-employee-form" id="password1" name="password1" type="text" placeholder="Password Confirmation" required/><br>
+                <input create-employee-button type="submit" value="Create Employee">
+            </form>
+        </div>
+
+        <div add-employee-button>
+            <button class="button">add employee</button>
+        </div>
+        
+    </div>
+</div>
+
+
+
+{% endblock %}

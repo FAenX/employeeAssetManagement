@@ -1,0 +1,22 @@
+{% load static %}
+<!doctype html>
+<html lang="en">
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>{% block title %} {% endblock %} </title>
+    <link rel="stylesheet" type="text/css" href="{% static 'style.css' %}">
+  </head>
+  <body>
+    <div main-container>
+        {% block content %}{% endblock %}
+        <section footer>
+          <footer>
+            ©2019 Emmanuel, Inc.
+          </footer>
+        </section>
+    </div>
+    <script type="text/javascript" src="{% static 'index.js' %}"></script>
+  </body>
+</html>

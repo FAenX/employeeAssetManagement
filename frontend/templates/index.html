@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+{% block title %} Employee and Asset Management {% endblock %}
+{% load static %}
+{% block content %}
+
+<div id="app" class="container-fluid" >
+  <section sex-login>
+    <div login-container> 
+      <div login-form>
+          <form login method="post" action="/home/login/">{% csrf_token %}
+            <input type="text"  id="login" name="email_address" placeholder="Email Address">
+            <input type="text" id="password" name="password" placeholder="Password">
+            <input login-button type="submit" value="Login">
+          </form>
+      </div>  
+      </div>
+  </section>
+</div>
+
+
+{% endblock %}

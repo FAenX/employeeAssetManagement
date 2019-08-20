@@ -13,7 +13,7 @@
             <div class="u-info">
                 <p class="u-info-item">{{ user.email }}</p>
                 <p class="u-info-item">{{user.first_name}} {{user.last_name}}</p>
-                <p class="u-info-item">item3</p>
+                <p class="u-info-item">{{ user.employerprofile.position }}</p>
             </div>
         </div>  
         <div admin-nav-item>
@@ -35,12 +35,19 @@
                             <p class="u-info-item">{{ employee.first_name}} {{employee.last_name}}</p>
                             <p class="u-info-item">Item3</p>
                         </div>
-                    </div>  
+                        <div employee-has-assets>
+                            <span items-count></span>
+                            <span items-list></span>
+                        </div>
+                    </div> 
                 </div>
+                <button  view-more>view more</button>
+                <span style="display: none" employee-id>{{employee.id}}</span>
+                {%csrf_token%}
             </div>
             {% endfor %}
             
-        </div>
+        </div>     
         
     </div>
 </div>
@@ -82,7 +89,21 @@
 
     </div>
     {% endfor %}
-</div>      
+</div> 
+<div employee-details>
+        <span class="close-btn">&times;</span>
+        <div personal-details>
+            <h3 id="title"> Details </h3>
+            <p id="full-name"></p>
+            <p id="email-address"></p>
+            <p id="contact-number"></p>
+            <p id="kra-pin"></p>
+            <p id="date-of-birth"></p>
+            <p id="id-number"></p>
+            <p id="date-joined"></p>
+        </div>
+        
+</div>     
 
 
 

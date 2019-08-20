@@ -2,10 +2,88 @@ body {
     font-size: 15px;
 
 }
-[nav-bar] {
-  background: none;
+input[type=text], select {
+  width: 100%;
+  padding: 12px 20px;
+  margin: 8px 0;
+  display: inline-block;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-sizing: border-box;
+}
+.button {
+  width: 80%;
+  background-color: #4CAF50;
+  color: white;
+  padding: 14px 20px;
+  margin: 8px 0;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+.button:hover {
+  background-color: #45a049;
+}
+
+.close-btn{
+  cursor: pointer;
+  color: black;
+  font-size: 30px;
+}
+.p-picture{
+  width: 150px; 
+  height: 150px;
+  margin: 0 auto;
+  border: 1px solid black;
+  border-radius: 100%;
+  margin-top: 10px;
+}
+.user-info{
+  text-align: center;
+  color: black;
+  min-height: 50px;
+  margin: 0 auto;
+  margin-top: 10px;
+  width: 150px;
+}
+
+.p-picture img{
+  border-radius: 100px;
+  height: 150px;
+  width: 150px;  
+}
+
+[add-employee-form] h3{
   text-align: center;
 
+}
+
+[nav-bar] {
+  background: none;
+  height: 40px;
+  width: 100%;
+
+}
+[nav-bar-items]{
+  float: right;
+  
+
+}
+[nav-bar-items] p{
+  float: left;
+  margin-right: 30px;
+  width: 10px;
+  height: 5px;
+  font-size: 10px;
+  
+}
+[logo]{
+  display:fixed;
+  height: 30px;
+  width: 30px;
+  background-color: #45a049;
+  left: 20%; 
+  float: left;
 }
 [login-container] {
     background-color: grey;
@@ -62,29 +140,6 @@ body {
   background-color: azure;
 }
 
-.p-picture{
-  width: 150px; 
-  height: 150px;
-  margin: 0 auto;
-  border: 1px solid black;
-  border-radius: 100%;
-  margin-top: 10px;
-}
-.user-info{
-  text-align: center;
-  color: black;
-  min-height: 50px;
-  margin: 0 auto;
-  margin-top: 10px;
-  width: 150px;
-}
-
-.p-picture img{
-  border-radius: 100px;
-  height: 150px;
-  width: 150px;  
-}
-
 [admin-nav-item]{
   width: 200px;
   margin: 0 auto;
@@ -131,6 +186,9 @@ body {
   
   
 }
+[employee]:hover {
+  background-color: #a7ecaa;
+}
 [employee-info] .user-info {
   height: 75%;
   width: 75%;
@@ -152,7 +210,7 @@ body {
   margin: 0 auto;
   
 }
-[add-employee-button]{
+[add-employee-button][view-all-assets-button]{
   size: 60px;
   width: 100px;
   margin: 0 auto;
@@ -174,42 +232,7 @@ body {
   margin-top: 10px;
 }
 
-input[type=text], select {
-  width: 100%;
-  padding: 12px 20px;
-  margin: 8px 0;
-  display: inline-block;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-  box-sizing: border-box;
-}
-.button {
-  width: 80%;
-  background-color: #4CAF50;
-  color: white;
-  padding: 14px 20px;
-  margin: 8px 0;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-}
-.button:hover {
-  background-color: #45a049;
-}
 
-.close-btn{
-  cursor: pointer;
-  color: black;
-  font-size: 30px;
-}
-
-[add-employee-form] h3{
-  text-align: center;
-
-}
-[create-employee-button]{
-  text-align: center;
-}
 /*assets */
 
 [assets-all-container]{
@@ -231,8 +254,8 @@ input[type=text], select {
 }
 
 [asset]{
-  min-height: 250px;
-  width: 200px;
+  min-height: 220px;
+  width: 210px;
   margin-top: 10px;
   margin-left: 10px;
   background-color: azure;
@@ -246,4 +269,32 @@ input[type=text], select {
 }
 .asset-info {
   text-align: center;
+}
+
+[employee-details]{
+  width: 60%;
+  min-height: 80%;
+  margin: 0 auto;
+  z-index: 1;
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 25%;
+  border: 1px solid gray;
+  border-radius: 20px;
+  background-color: rgba(0,0,0,0.3); /* Black w/ opacity */
+  padding: 20px;
+  margin-top: 10px;
+}
+[view-more]{
+  height: 20px;
+  text-align: center;
+  width: 80%;
+  background-color: #4CAF50;
+  color: white;
+  padding: 14px 20px;
+  margin: 10px 8px 10px 8px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
 }

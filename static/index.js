@@ -1,24 +1,67 @@
-//view all assets
-const toogleAssetsEmployees =()=>{
-    const assetsAll = document.querySelector('[assets-all-container]');
+// getEmployeeId
+const getEmployeeId = () =>{
+    let target = event.target;
+    let employeeId = target.parentNode.childNodes[5].innerText;
+    let data = {'employee_id':employeeId}
+    let csrfToken = target.parentNode.childNodes[7].value;
+    let url = 'http://127.0.0.1:8000/home/employee-API/';
+    postData(url, data, csrfToken)
+    .then(data => popEmployee(JSON.parse(data))) // JSON-string from `response.json()` call
+    .catch(error => console.error(error));
+    //console.log(employeeData);
+    
+};
+
+//pop employee details modal
+const popEmployee = (employeeData) =>{
+    const parentNode = document.querySelector('[employee-details]');
+
+    console.log(employeeData[0]['fields']);
+    
+    document.querySelector('[personal-details] #full-name').innerText = `${employeeData[0]['fields']['first_name']} ${employeeData[0]['fields']['last_name']}`;
+    document.querySelector('[personal-details] #email-address').innerText = `${employeeData[0]['fields']['email']}`;
+    document.querySelector('[personal-details] #contact-number').innerText= `${employeeData[0]['fields']['contact_number']}`;
+    document.querySelector('[personal-details] #kra-pin').innerText= `${employeeData[0]['fields']['kra_pin']}`;
+    document.querySelector('[personal-details] #date-joined').innerText= `${employeeData[0]['fields']['date_joined']}`;
+    document.querySelector('[personal-details] #date-of-birth').innerText = `${employeeData[0]['fields']['date_of_birth']}`;
+    document.querySelector('[personal-details] #id-number').innerText= `${employeeData[0]['fields']['id_number']}`;
+    console.log(document.querySelector('[personal-details] #full-name'));
+    parentNode.style.display = 'block';
+    fadeBackground();
+    
+};
+
+//fade background on modal popup
+const fadeBackground = () =>{
     const employerData = document.querySelector('[employer-data]');
     const adminNav = document.querySelector('[admin-nav]');
 
-    assetsAll.style.display='inline-block';
     employerData.style.opacity ='.3';
     adminNav.style.opacity='.3'
+
 };
 
-const toogleEmployeesAssets = ()=>{
+//view all assets
+const showAssets =()=>{
+    const assetsAll = document.querySelector('[assets-all-container]');  
+
+    assetsAll.style.display='inline-block';
+    fadeBackground();
+    
+};
+
+const closeModal = ()=>{
     const assetsAll = document.querySelector('[assets-all-container]');
     const employerData = document.querySelector('[employer-data]');
     const form = document.querySelector('[add-employee-form]');
     const adminNav = document.querySelector('[admin-nav]');
+    const employeeDetails=document.querySelector('[employee-details]');
     employerData.style.opacity ='1';
     adminNav.style.opacity='1'
     assetsAll.style.display='none';
     employerData.style.display = 'block';
     form.style.display = 'none';
+    employeeDetails.style.display = 'none';
 
 };
 
@@ -70,7 +113,7 @@ const login = () => {
 
 // login
 const postData = (url, data, csrfToken) =>{
-    fetch(url, {
+    return fetch(url, {
         method: 'POST',
         mode: 'cors', // no-cors, cors, *same-origin
         cache: 'no-cache', // *default, no-cache, reload, force-cache, only-if-cached
@@ -84,32 +127,39 @@ const postData = (url, data, csrfToken) =>{
         body: JSON.stringify(data)
 
     }) 
+    
     .then(response => response.json())
-    .then(data => {
-    console.log(data) // Prints result from `response.json()` in getRequest
-    })
-    .catch(error => console.error(error));
     };
 
-
-
+//handle get requests
+const getData = (url, data)=>{
     
 
+};
+
 // start app
-closeBtn = document.querySelectorAll('.close-btn');
-loginBtn = document.querySelector('[login-button]');
-addEmpBtn = document.querySelector('[add-employee-button]');
-createEmployeeBtn = document.querySelector('[create-employee-button]');
-viewAllAssetsBtn = document.querySelector('[view-all-assets]');
+const closeBtn = document.querySelectorAll('.close-btn');
+const loginBtn = document.querySelector('[login-button]');
+const addEmpBtn = document.querySelector('[add-employee-button]');
+const createEmployeeBtn = document.querySelector('[create-employee-button]');
+const viewAllAssetsBtn = document.querySelector('[view-all-assets]');
+const employeeDiv = document.querySelectorAll('[view-more]');
+//const employeeField = document.querySelector('[employee-info] .user-info .u-info');
+//console.log(employeeDiv);
 
 
 addEmpBtn.addEventListener('click', showHideDivs);
 //loginBtn.addEventListener('click', login);
 createEmployeeBtn.addEventListener('click', createEmployee);
-viewAllAssetsBtn.addEventListener('click', toogleAssetsEmployees);
+viewAllAssetsBtn.addEventListener('click', showAssets);
 
 closeBtn.forEach(element => {
-    return element.addEventListener('click', toogleEmployeesAssets);
+    return element.addEventListener('click', closeModal);
     
 });
+employeeDiv.forEach(element =>{
+    element.addEventListener('click', getEmployeeId);
+});
+
+
 

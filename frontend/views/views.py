@@ -2,9 +2,10 @@ from django.views.generic import TemplateView
 from django.shortcuts import render_to_response
 from django.shortcuts import render, reverse
 from django.views import View
-from django.http import HttpResponse, HttpResponseRedirect
+from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
 from django.contrib.auth import authenticate, login
 from django.contrib.auth import get_user_model
+from django.core import serializers
 
 
 import json
@@ -71,3 +72,14 @@ class SignUpView(View):
         except Exception as e:
             print(e.message)
             return HttpResponse(418)
+
+class EmployeeApiView(View):
+    def post(self, request):
+        employee_id = json.loads(self.request.body)['employee_id']
+        employee = User.objects.filter(id=employee_id)
+        serialized_object = serializers.serialize('json', employee)
+        print(type(serialized_object))
+        return JsonResponse(serialized_object, safe=False)
+        
+
+        

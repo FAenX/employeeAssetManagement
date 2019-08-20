@@ -9,6 +9,16 @@
     <link rel="stylesheet" type="text/css" href="{% static 'style.css' %}">
   </head>
   <body>
+    <div nav-bar>
+      <div logo>
+        <img src=""/>
+      </div>
+      <div nav-bar-items>
+        <p class="button">Logout</p>
+        <p class="button">Login</p>
+      </div>
+
+    </div>
     <div main-container>
         {% block content %}{% endblock %}
         <section footer>

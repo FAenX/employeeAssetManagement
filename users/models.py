@@ -65,7 +65,6 @@ class User(AbstractUser):
     slug = models.SlugField(unique=True)
     contact_number = PhoneNumberField(_('Contact Phone Number'),blank=True, null=True)
     creation_date = models.DateTimeField(default=datetime.datetime.now)
-                
 
     username = None
 
@@ -82,11 +81,10 @@ class EmployeeProfile(models.Model):
     user = models.OneToOneField(
         User, related_name='employeeprofile', on_delete=models.CASCADE)
     slug = models.SlugField(max_length=40, unique=True)
-    
-    
-
-    def get_absolute_url(self):
-        return reverse('employee_profile', kwargs={'slug': self.slug})    
+    kra_pin = models.CharField(max_length=20, blank=True)
+    date_of_birth = models.DateField(blank=True)
+    id_number = models.CharField(max_length=10, blank=True)
+    created_by = models.IntegerField()
 
     #string represantation of the model
     def __str__(self):
@@ -102,9 +100,7 @@ class EmployerProfile(models.Model):
         _('What is your position in the company'), max_length=40, default='')
     slug = models.SlugField(max_length=40, unique=True)
     number_of_employees = models.IntegerField()
-
-    def get_absolute_url(self):
-        return reverse('employer_profile', kwargs={'slug': self.slug})    
+    company = models.CharField(max_length=20)
 
     #string representation of the model
     def __str__(self):

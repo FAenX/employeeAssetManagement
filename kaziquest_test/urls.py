@@ -23,7 +23,4 @@ from frontend.views import views
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('home/', include('frontend.urls')),
-
-    #index
-    path('', views.IndexView.as_view(), name='home'),
 ]

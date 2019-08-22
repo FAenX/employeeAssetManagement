@@ -3,24 +3,16 @@ from django.shortcuts import render_to_response
 from django.shortcuts import render, reverse
 from django.views import View
 from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
-from django.contrib.auth import authenticate, login
+from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth import get_user_model
 from django.core import serializers
-
-
 import json
 
 # Create your views here.
-
 from company_assets.models import Asset
 
+#get user model
 User = get_user_model()
-
-# index view
-
-
-class IndexView(TemplateView):
-    template_name = 'index.html'
 
 
 class EmployerDashboardView(TemplateView):
@@ -43,7 +35,6 @@ class LoginView(View):
         data = json.loads(self.request.body)
         email = data['email']
         password = data['password']
-        print(password)
         user = authenticate(email=email, password=password)
         if user:
             if user.is_active:
@@ -56,7 +47,14 @@ class LoginView(View):
             print("They used username: {} and password: {}".format(email, password))
             return HttpResponse("Invalid login details given")
 
+#logout view
+class logoutView(View):
+    '''logout view'''
+    def get(self, request):
+        logout(self.request)
+        return HttpResponse('200')
 
+#sign up view
 class SignUpView(View):
     ''' sign up '''
 
@@ -70,7 +68,7 @@ class SignUpView(View):
                                             is_employee = True)
             return HttpResponse(200)
         except Exception as e:
-            print(e.message)
+            print(e)
             return HttpResponse(418)
 
 class EmployeeApiView(View):
@@ -80,6 +78,10 @@ class EmployeeApiView(View):
         serialized_object = serializers.serialize('json', employee)
         print(type(serialized_object))
         return JsonResponse(serialized_object, safe=False)
+
+class UserApiView(View):
+    def get(self, request):
+        return User
         
 
         

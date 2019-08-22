@@ -3,7 +3,17 @@
 {% load static %}
 {% block content %}
 
+<!--nav bar-->
+<div nav-bar>
+    <div logo>
+      <img src=""/>
+    </div>
+    <div nav-bar-items>
+      <p class="button" nav-bar-logout>Logout</p>
+    </div>
+</div>
 
+<!-- eployer profile container -->
 <div profile-container>
     <div admin-nav>
         <div class="p-picture">
@@ -14,6 +24,7 @@
                 <p class="u-info-item">{{ user.email }}</p>
                 <p class="u-info-item">{{user.first_name}} {{user.last_name}}</p>
                 <p class="u-info-item">{{ user.employerprofile.position }}</p>
+                <span logged-in-user-id>{{user.id}}</span>
             </div>
         </div>  
         <div admin-nav-item>
@@ -41,9 +52,11 @@
                         </div>
                     </div> 
                 </div>
-                <button  view-more>view more</button>
-                <span style="display: none" employee-id>{{employee.id}}</span>
-                {%csrf_token%}
+                <div view-more>
+                    <button class="button">view more</button>
+                    <span style="display: none" employee-id>{{employee.id}}</span>
+                    {%csrf_token%}
+                </div>
             </div>
             {% endfor %}
             
@@ -51,27 +64,24 @@
         
     </div>
 </div>
-
+<!-- add employee modal -->
 <div add-employee-form>
     <span class="close-btn">&times;</span>
     <h3> Create Employee</h3>
     <form create-employee-form>{% csrf_token %}
         <label for="email_address"> Email Address</label>
-        <input class="create-employee-form" id="email_address" name="email_address" type="text" placeholder="Email Address" required/><br>
+        <input class="create-user-form" id="email_address" name="email_address" type="text" placeholder="Email Address" required/><br>
         <label for='first_name'>First Name:</label>
-        <input class="create-employee-form" id="first_name" name="first_name" type="text" placeholder="First Name" required/><br>
+        <input class="create-user-form" id="first_name" name="first_name" type="text" placeholder="First Name" required/><br>
         <label for='last_name'>Last Name:</label>
-        <input class="create-employee-form" id="last_name" name="last_name" type="text" placeholder="Last Name" required/><br>
-        <label for="raw_password"> Password </label>
-        <input class="create-employee-form" id="raw_password" name="raw_password" type="text" placeholder="Password" required/></br>
-        <label for="password1">Re-enter Password</label>
-        <input class="create-employee-form" id="password1" name="password1" type="text" placeholder="Password Confirmation" required/><br>
+        <input class="create-user-form" id="last_name" name="last_name" type="text" placeholder="Last Name" required/><br>
         <input id="user" style="display: none" value="{{ user.id }}"/>
     </form>
     <div create-employee-button>
         <button class="button">Create Employee</button>
     </div>
-</div>  
+</div> 
+<!-- company assets modal--> 
 <div assets-all-container>
     <span class="close-btn">&times;</span>
     <h3> Company Assets</h3>
@@ -90,6 +100,7 @@
     </div>
     {% endfor %}
 </div> 
+<!--employee details modal-->
 <div employee-details>
         <span class="close-btn">&times;</span>
         <div personal-details>
@@ -103,8 +114,45 @@
             <p id="date-joined"></p>
         </div>
         
-</div>     
+</div>   
 
+<!-- login modal-->
+<div login-container> 
+    <div login-form>
+        <form login>{% csrf_token %}
+          <input type="text"  id="login" name="email_address" placeholder="Email Address">
+          <input type="text" id="password" name="password" placeholder="Password">
+        </form>
+    </div>  
+    <div login-button>
+        <button class="button" login-button > Login </button>
+    </div>   
+</div>  
 
+<!-- employer sign up modal -->
+<div employer-signup-form>
+    <span class="close-btn">&times;</span>
+    <h3> Sign up</h3>
+    <form sign-up-form>{% csrf_token %}
+        <label for="email_address"> Email Address</label>
+        <input class="create-user-form" id="email_address" name="email_address" type="text" placeholder="Email Address" required/><br>
+        <label for='first_name'>First Name:</label>
+        <input class="create-user-form" id="first_name" name="first_name" type="text" placeholder="First Name" required/><br>
+        <label for='last_name'>Last Name:</label>
+        <input class="create-user-form" id="last_name" name="last_name" type="text" placeholder="Last Name" required/><br>
+        <label for="raw_password"> Password </label>
+        <input class="create-user-form" id="raw_password" name="raw_password" type="text" placeholder="Password" required/></br>
+        <label for="password1">Re-enter Password</label>
+        <input class="create-user-form" id="password1" name="password1" type="text" placeholder="Password Confirmation" required/><br>
+    </form>
+    <div create-employee-button>
+        <button class="button">Sign up</button>
+    </div>
+</div> 
+
+<!--login signup success-->
+<div on-signup-login-success>
+    success
+</div>
 
 {% endblock %}

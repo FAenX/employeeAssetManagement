@@ -7,9 +7,11 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth import get_user_model
 from django.core import serializers
 import json
+from django.db import transaction
 
 # Create your views here.
 from company_assets.models import Asset
+from users.models import EmployeeProfile
 
 #get user model
 User = get_user_model()
@@ -55,21 +57,46 @@ class logoutView(View):
         return HttpResponse('200')
 
 #sign up view
-class SignUpView(View):
+class CreateEmployee(View):
     ''' sign up '''
-
+    @transaction.atomic
     def post(self, request):
         data = json.loads(self.request.body)
         print(data)
+        print(self.request.user.id)
 
         try:
             user = User.objects.create_user(email=data['email'], password=data['password'], 
                                             first_name=data['first_name'], last_name=data['last_name'], 
                                             is_employee = True)
+            
+            user_profile = EmployeeProfile.objects.get_or_create(user=user, created_by=self.request.user.id)
+            print(user_profile)
             return HttpResponse(200)
         except Exception as e:
-            print(e)
-            return HttpResponse(418)
+            print('Exception:', e)
+            
+            return JsonResponse(str(e), safe=False)
+
+#employer sign up view
+class CreateEmployer(View):
+    ''' sign up '''
+    @transaction.atomic
+    def post(self, request):
+        data = json.loads(self.request.body)
+        print(data)
+        print(self.request.user.id)
+
+        try:
+            user = User.objects.create_user(email=data['email'], password=data['password'], 
+                                            first_name=data['first_name'], last_name=data['last_name'], 
+                                            is_employer = True)
+            
+            return HttpResponse(200)
+        except Exception as e:
+            print('Exception:', e)
+            
+            return JsonResponse(str(e), safe=False)
 
 class EmployeeApiView(View):
     def post(self, request):

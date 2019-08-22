@@ -13,7 +13,6 @@ const getEmployeeId = () =>{
 
 //pop employee details modal
 const popEmployee = (employeeData) =>{
-    const parentNode = document.querySelector('[employee-details]');
     console.log(employeeData[0]['fields']);    
     document.querySelector('[personal-details] #full-name').innerText = `Full Name: ${employeeData[0]['fields']['first_name']} ${employeeData[0]['fields']['last_name']}`;
     document.querySelector('[personal-details] #email-address').innerText = `Email Address: ${employeeData[0]['fields']['email']}`;
@@ -23,58 +22,49 @@ const popEmployee = (employeeData) =>{
     document.querySelector('[personal-details] #date-of-birth').innerText = `D.O.B: ${employeeData[0]['fields']['date_of_birth']}`;
     document.querySelector('[personal-details] #id-number').innerText= `ID-Number: ${employeeData[0]['fields']['id_number']}`;
     console.log(document.querySelector('[personal-details] #full-name'));
-    parentNode.style.display = 'block';
-    fadeBackground();    
-};
-
-//fade background on modal popup
-const fadeBackground = () =>{
-    const employerData = document.querySelector('[employer-data]');
-    const adminNav = document.querySelector('[admin-nav]');
-    employerData.style.opacity ='.3';
-    adminNav.style.opacity='.3';
-};
-
-//view all assets
-const showAssets =()=>{
-    const assetsAll = document.querySelector('[assets-all-container]');  
-    assetsAll.style.display='inline-block';
-    fadeBackground();    
-};
-
-//close modals
-const closeModal = ()=>{
-    const assetsAll = document.querySelector('[assets-all-container]');
-    const employerData = document.querySelector('[employer-data]');
-    const form = document.querySelector('[add-employee-form]');
-    const adminNav = document.querySelector('[admin-nav]');
-    const employeeDetails=document.querySelector('[employee-details]');
-    employerData.style.opacity ='1';
-    adminNav.style.opacity='1'
-    assetsAll.style.display='none';
-    employerData.style.display = 'block';
-    form.style.display = 'none';
-    employeeDetails.style.display = 'none';
-};
-
-//hide div given field
-const addEmployee =()=>{
-    const parentNode = document.querySelector('[add-employee-form]');
-    parentNode.style.display='block';  
-    fadeBackground();
+    showEmployeeDetails();
+    fadeAdminNav();
+    fadeEmployerData();
 };
 
 //sign up data
 const createEmployee =()=>{
-    let csrfToken = document.querySelector('[create-employee-form] input:nth-child(1)').value;
-    let email = document.querySelector('[create-employee-form] #email_address').value;
-    let firstName = document.querySelector('[create-employee-form] #first_name').value;
-    let LastName = document.querySelector('[create-employee-form] #last_name').value;
-    let user = document.querySelector('[create-employee-form] #user').value;
-    let data = {'first_name':firstName, 'last_name': LastName, 'email':email, 'created_by': user};
-    const url = 'http://127.0.0.1:8000/home/signup/';
-    postData(url, data, csrfToken);
-    console.log(data); 
+    let errorField = document.querySelector('[add-employee-form] #error-message')
+    let csrfToken = document.querySelector('[add-employee-form] input:nth-child(1)').value;
+    let email = document.querySelector('[add-employee-form] #email_address').value;
+    let firstName = document.querySelector('[add-employee-form] #first_name').value;
+    let LastName = document.querySelector('[add-employee-form] #last_name').value;
+    let randomPassword = randomPass(10);
+    let data = {'first_name':firstName, 'last_name': LastName, 'email':email, 'password': randomPassword};
+    const url = 'http://127.0.0.1:8000/home/employee-signup/';
+    postData(url, data, csrfToken)
+    .then(response => {
+        console.log(response); 
+        showSignupError(errorField ,response);
+    })
+};
+
+//create employer
+const createEmployer =()=>{
+    let errorField = document.querySelector('[employer-signup-form] #error-message')
+    let csrfToken = document.querySelector('[signup-form] input:nth-child(1)').value;
+    let email = document.querySelector('[signup-form] #email_address').value;
+    let firstName = document.querySelector('[signup-form] #first_name').value;
+    let LastName = document.querySelector('[signup-form] #last_name').value;
+    let password = document.querySelector('[signup-form] #raw_password').value;
+    let data = {'first_name':firstName, 'last_name': LastName, 'email':email, 'password': password};
+    const url = 'http://127.0.0.1:8000/home/employer-signup/';
+    postData(url, data, csrfToken)
+    .then(response => {
+        console.log(response); 
+        showSignupError(errorField, response);
+    })
+};
+
+//showSignupError
+const showSignupError =(errorField, error)=>{
+    errorField.textContent = error;
+    
 };
 
 //is loged out
@@ -146,7 +136,6 @@ const isLogedIn = ()=>{
         console.log('isLogedIn');
         console.log(userId);
         saveUserToLocalStorage();
-        removeLoginModal(); 
         return true;
 
     }else{
@@ -168,39 +157,113 @@ const onLogin = (data) =>{
 //on login
 const onLogout = (data) =>{
     console.log(data);
-    location.reload();        
+    location.reload();     
     return true; 
 };
 
 //show login
 const showLoginModal =()=>{
-    let loginField = document.querySelector('[login-container');
-    loginField.style.display = 'block';
-    clearBackground();
+    document.querySelector('[login-container').style.display = 'block';
+    hideAddEmployeeForm();
+    hideAdminNav();
+    hideAssetsContainer();
+    hideEmployeeDetails();
+    hideEmployerDataCont();
+    hideEmployerSignup();
 };
-
-
 
 //remove login
-const removeLoginModal =()=>{
-    let loginField = document.querySelector('[login-container');
-    loginField.style.display = 'none';
-    restoreBackground();
+const hideLoginModal =()=>{
+    document.querySelector('[login-container').style.display = 'none';    
 };
 
-//clear background
-const clearBackground =()=>{
+//employer sign up
+const showEmployerSignup =()=>{
+    document.querySelector('[employer-signup-form]').style.display = 'block';
+    hideAddEmployeeForm();
+    hideAdminNav();
+    hideAssetsContainer();
+    hideEmployeeDetails();
+    hideEmployerDataCont();
+    hideLoginModal();
+};
+
+//home view
+const homeView =()=>{
+    showAdminNav();
+    showEmployerDataCont();
+};
+
+//hide employer sign up
+const hideEmployerSignup =()=>{
+    document.querySelector('[employer-signup-form]').style.display = 'none';
+};
+
+//show assets container
+const showAssetsContainer =()=>{
+    document.querySelector('[assets-all-container]').style.display ='block';
+    fadeAdminNav();
+    fadeEmployerData();
+};
+
+//hide assets container
+const hideAssetsContainer =()=>{
     document.querySelector('[assets-all-container]').style.display ='none';
-    document.querySelector('[employer-data]').style.display ='none';
-    document.querySelector('[add-employee-form]').style.display ='none';
-    document.querySelector('[admin-nav]').style.display ='none';
-    document.querySelector('[employee-details]').style.display ='none';
 };
 
-//restore background
-const restoreBackground =()=>{
+//show employer data container
+const showEmployerDataCont =()=>{
     document.querySelector('[employer-data]').style.display ='block';
+};
+
+//hide employer data container
+const hideEmployerDataCont =()=>{
+    document.querySelector('[employer-data]').style.display ='none';
+};
+
+//fade employer data container
+const fadeEmployerData= () =>{
+    document.querySelector('[employer-data]').style.opacity ='.3';
+};
+
+//show add-employee form
+const showAddEmployeeForm =()=>{
+    document.querySelector('[add-employee-form]').style.display ='block';
+    fadeAdminNav();
+    fadeEmployerData();
+};
+
+//const hide add-employee form
+const hideAddEmployeeForm =()=>{
+    document.querySelector('[add-employee-form]').style.display ='none';
+};
+
+//show admin nav container
+const showAdminNav =()=>{
     document.querySelector('[admin-nav]').style.display ='block';
+};
+
+//hide admin nav container
+const hideAdminNav =()=>{
+    document.querySelector('[admin-nav]').style.display ='none';
+};
+
+//fade admin nav container
+const fadeAdminNav =()=>{
+    document.querySelector('[admin-nav]').style.opacity ='.3';
+};
+
+
+//show employee details container
+const showEmployeeDetails =()=>{    
+    document.querySelector('[employee-details]').style.display ='block';
+    fadeAdminNav();
+    fadeEmployerData();
+};
+
+//hide employee details container
+const hideEmployeeDetails =()=>{    
+    document.querySelector('[employee-details]').style.display ='none';
 };
 
 //save user to local storage
@@ -221,31 +284,56 @@ const getUserFromLocalStorage = () =>{
     return user;
 };
 
+//close button event
+const closeBtnEvent =()=>{
+    hideAddEmployeeForm();
+    hideAssetsContainer();
+    hideEmployeeDetails();
+    hideEmployerSignup();
+    isLogedIn();
+};
+
 // add event listeners
 const addEventListeners = () =>{
     const closeBtn = document.querySelectorAll('.close-btn');
     const loginBtn = document.querySelector('[login-button]');
-    const addEmpBtn = document.querySelector('[add-employee-button]');
-    const createEmployeeBtn = document.querySelector('[create-employee-button]');
-    const viewAllAssetsBtn = document.querySelector('[view-all-assets]');
-    const employeeDiv = document.querySelectorAll('[view-more]');
-    const navLogout = document.querySelector('[nav-bar-logout]');
+    const submitEmployeeBtn = document.querySelector('[submit-add-employee-button]');
+    const submitEmployerBtn= document.querySelector('[submit-add-employer-button]');
+    const viewAllAssetsBtn = document.querySelector('[view-all-assets-button]');
+    const showEmployeeDetailsBtn = document.querySelectorAll('[view-more-button]');
+    const navLogoutBtn = document.querySelector('[nav-bar-logout-button]');
+    const showEmployerSignUpBtn = document.querySelector('[signup-button]');
+    const addEmployeeButton = document.querySelector('[add-employee-button]');
 
-    addEmpBtn.addEventListener('click', addEmployee);
+    addEmployeeButton.addEventListener('click', showAddEmployeeForm);
     loginBtn.addEventListener('click', login);
-    navLogout.addEventListener('click', logout);
-    createEmployeeBtn.addEventListener('click', createEmployee);
-    viewAllAssetsBtn.addEventListener('click', showAssets);
+    navLogoutBtn.addEventListener('click', logout);
+    showEmployerSignUpBtn.addEventListener('click', showEmployerSignup)
+    submitEmployeeBtn.addEventListener('click', createEmployee);
+    submitEmployerBtn.addEventListener('click', createEmployer)
+    viewAllAssetsBtn.addEventListener('click', showAssetsContainer);
 
     closeBtn.forEach(element => {
-        return element.addEventListener('click', closeModal);
+        return element.addEventListener('click', closeBtnEvent);
         
     });
-    employeeDiv.forEach(element =>{
+    showEmployeeDetailsBtn.forEach(element =>{
         element.addEventListener('click', getEmployeeId);
     });
 };
 
+//generate random password
+const randomPass =(length)=> {
+    let result           = '';
+    const characters       = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+    let charactersLength = characters.length;
+    for ( var i = 0; i < length; i++ ) {
+        result += characters.charAt(Math.floor(Math.random() * charactersLength));
+    }
+    return result;
+    
+     
+};
 
 //statr app
 startApp = () =>{    

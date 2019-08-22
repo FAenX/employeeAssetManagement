@@ -6,10 +6,10 @@
 <!--nav bar-->
 <div nav-bar>
     <div logo>
-      <img src=""/>
+      <img src="/static/logo.png"/>
     </div>
     <div nav-bar-items>
-      <p class="button" nav-bar-logout>Logout</p>
+      <p class="button" nav-bar-logout-button>Logout</p>
     </div>
 </div>
 
@@ -24,12 +24,12 @@
                 <p class="u-info-item">{{ user.email }}</p>
                 <p class="u-info-item">{{user.first_name}} {{user.last_name}}</p>
                 <p class="u-info-item">{{ user.employerprofile.position }}</p>
-                <span logged-in-user-id>{{user.id}}</span>
+                <span style="display: none;" logged-in-user-id>{{user.id}}</span>
             </div>
         </div>  
         <div admin-nav-item>
             <p add-employee-button class="button">add employee</p> 
-            <p view-all-assets class="button"> view all assets </p>           
+            <p view-all-assets-button class="button"> view all assets </p>           
         </div>         
     </div>
     <div employer-data>
@@ -53,7 +53,7 @@
                     </div> 
                 </div>
                 <div view-more>
-                    <button class="button">view more</button>
+                    <button class="button" view-more-button>view more</button>
                     <span style="display: none" employee-id>{{employee.id}}</span>
                     {%csrf_token%}
                 </div>
@@ -65,10 +65,11 @@
     </div>
 </div>
 <!-- add employee modal -->
-<div add-employee-form>
+<div class="signup-form" add-employee-form>
     <span class="close-btn">&times;</span>
     <h3> Create Employee</h3>
-    <form create-employee-form>{% csrf_token %}
+    <span id="error-message"></span>
+    <form add-employee-form>{% csrf_token %}
         <label for="email_address"> Email Address</label>
         <input class="create-user-form" id="email_address" name="email_address" type="text" placeholder="Email Address" required/><br>
         <label for='first_name'>First Name:</label>
@@ -77,7 +78,7 @@
         <input class="create-user-form" id="last_name" name="last_name" type="text" placeholder="Last Name" required/><br>
         <input id="user" style="display: none" value="{{ user.id }}"/>
     </form>
-    <div create-employee-button>
+    <div submit-add-employee-button>
         <button class="button">Create Employee</button>
     </div>
 </div> 
@@ -124,16 +125,18 @@
           <input type="text" id="password" name="password" placeholder="Password">
         </form>
     </div>  
-    <div login-button>
+    <div class="login">
         <button class="button" login-button > Login </button>
+        <button class="button" signup-button > signup </button>
     </div>   
 </div>  
 
 <!-- employer sign up modal -->
-<div employer-signup-form>
+<div class="signup-form" employer-signup-form>
     <span class="close-btn">&times;</span>
     <h3> Sign up</h3>
-    <form sign-up-form>{% csrf_token %}
+    <span id="error-message"></span>
+    <form signup-form>{% csrf_token %}
         <label for="email_address"> Email Address</label>
         <input class="create-user-form" id="email_address" name="email_address" type="text" placeholder="Email Address" required/><br>
         <label for='first_name'>First Name:</label>
@@ -145,14 +148,11 @@
         <label for="password1">Re-enter Password</label>
         <input class="create-user-form" id="password1" name="password1" type="text" placeholder="Password Confirmation" required/><br>
     </form>
-    <div create-employee-button>
+    <div submit-add-employer-button>
         <button class="button">Sign up</button>
     </div>
 </div> 
 
-<!--login signup success-->
-<div on-signup-login-success>
-    success
-</div>
+
 
 {% endblock %}

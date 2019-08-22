@@ -58,12 +58,12 @@ class User(AbstractUser):
     '''
 
     email = models.EmailField(_('Email Address'), blank=False, unique=True)
-    first_name = models.CharField(_('First Name'), max_length=50, blank=False)
-    last_name = models.CharField(_('Last Name'), max_length=50, blank=False)
+    first_name = models.CharField(_('First Name'), max_length=50, null=False, blank=False)
+    last_name = models.CharField(_('Last Name'), max_length=50, null=False, blank=False)
     is_employee = models.BooleanField('Employee', default=False)
     is_employer = models.BooleanField('Employer', default=False)
     slug = models.SlugField(unique=True)
-    contact_number = PhoneNumberField(_('Contact Phone Number'),blank=True, null=True)
+    contact_number = PhoneNumberField(_('Contact Phone Number'),blank=True, null=True, unique=True)
     creation_date = models.DateTimeField(default=datetime.datetime.now)
 
     username = None
@@ -82,8 +82,8 @@ class EmployeeProfile(models.Model):
         User, related_name='employeeprofile', on_delete=models.CASCADE)
     slug = models.SlugField(max_length=40, unique=True)
     kra_pin = models.CharField(max_length=20, blank=True)
-    date_of_birth = models.DateField(blank=True)
-    id_number = models.CharField(max_length=10, blank=True)
+    date_of_birth = models.DateField(blank=True, null=True)
+    id_number = models.CharField(max_length=10, blank=True, null=True)
     created_by = models.IntegerField()
 
     #string represantation of the model
@@ -99,7 +99,7 @@ class EmployerProfile(models.Model):
     position = models.CharField(
         _('What is your position in the company'), max_length=40, default='')
     slug = models.SlugField(max_length=40, unique=True)
-    number_of_employees = models.IntegerField()
+    number_of_employees = models.IntegerField(null=True)
     company = models.CharField(max_length=20)
 
     #string representation of the model
@@ -126,14 +126,11 @@ def create_user_slug(sender, instance, *args, **kwargs):
     if not instance.slug:
         instance.slug = user_unique_slug_generator(instance)
 
-###############
-#post_save user profile
-##############
+# ###############
+# #post_save user profile
+# ##############
 @receiver(post_save, sender=User)
 def create_profile(sender, instance, created, **kwargs):
-    if created:
-        if instance.is_employee:
-            EmployeeProfile.objects.create(user=instance)
-        elif instance.is_employer:
-            EmployerProfile.objects.create(user=instance)
+        if instance.is_employer:
+            EmployerProfile.objects.get_or_create(user=instance)
             

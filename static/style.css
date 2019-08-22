@@ -1,5 +1,6 @@
 body {
     font-size: 15px;
+   
 
 }
 input[type=text], select {
@@ -61,10 +62,16 @@ input[type=text], select {
 
 [nav-bar] {
   background: none;
-  height: 50px;
+  height: 70px;
   width: 100%;
-
+  display: block;
+  overflow: hidden;
+  background-color: transparent;
+  top: 0;
+  margin-bottom: 15px;
+  width: 100%;
 }
+
 [nav-bar-items]{
   float: right; 
 }
@@ -77,6 +84,11 @@ input[type=text], select {
   font-size: 15px;
   
 }
+
+[nav-bar-logout]{
+  display: block;
+}
+
 [logo]{
   display:fixed;
   height: 80px;
@@ -84,6 +96,14 @@ input[type=text], select {
   background-color: #45a049;
   float: left;
 }
+
+[logo] img{
+display: fixed;
+position: absolute;
+width: 100px;
+height: 100px;
+}
+
 [login-container] {
     background-color: rgba(156, 233, 216, 0.4);
     width: 400px;
@@ -120,7 +140,8 @@ input[type=text], select {
   width: 100%;
   min-height: 800px;
   border-radius: 10px;
-  background: transparent;  
+  background: transparent; 
+  top: 10; 
 }
 
 [Admin-nav]{
@@ -207,7 +228,7 @@ input[type=text], select {
   margin: 0 auto;
 }
 
-[add-employee-form]{
+.signup-form {
   width: 400px;
   margin: 0 auto;
   display: none;

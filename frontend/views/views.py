@@ -9,13 +9,21 @@ from django.core import serializers
 import json
 from django.db import transaction
 
+
+from django.contrib.sites.shortcuts import get_current_site
+from django.utils.encoding import force_bytes, force_text
+from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
+from django.template.loader import render_to_string
+from frontend.tokens import account_activation_token
+
+from django.core.mail import EmailMessage
+
 # Create your views here.
 from company_assets.models import Asset
 from users.models import EmployeeProfile
 
 #get user model
 User = get_user_model()
-
 
 class EmployerDashboardView(TemplateView):
     template_name = 'employer_dashboard.html'
@@ -64,19 +72,34 @@ class CreateEmployee(View):
         data = json.loads(self.request.body)
         print(data)
         print(self.request.user.id)
-
         try:
             user = User.objects.create_user(email=data['email'], password=data['password'], 
                                             first_name=data['first_name'], last_name=data['last_name'], 
-                                            is_employee = True)
+                                            is_employee = True)      
             
             user_profile = EmployeeProfile.objects.get_or_create(user=user, created_by=self.request.user.id)
-            print(user_profile)
-            return HttpResponse(200)
+            #print(user_profile)
+            user.is_active = False
+            current_site = get_current_site(self.request)
+            mail_subject = 'Activate your blog account.'
+            message = render_to_string('email_template.html', {
+                'user': user,
+                'domain': current_site.domain,
+                'uid':urlsafe_base64_encode(force_bytes(user.pk)),
+                'token':account_activation_token.make_token(user),
+            })
+            to_email = data['email']
+            email = EmailMessage(
+                        mail_subject, message, to=[to_email]
+            )
+            email.send()
+            return JsonResponse('Please confirm your email address to complete the registration', safe=False)
+        
         except Exception as e:
-            print('Exception:', e)
-            
+            print('Exception:', e)            
             return JsonResponse(str(e), safe=False)
+
+        
 
 #employer sign up view
 class CreateEmployer(View):
@@ -97,6 +120,24 @@ class CreateEmployer(View):
             print('Exception:', e)
             
             return JsonResponse(str(e), safe=False)
+
+#activate url
+class Activate(View):
+    '''activate'''
+    def activate(self, request, uidb64, token):
+        try:
+            uid = force_text(urlsafe_base64_decode(uidb64))
+            user = User.objects.get(pk=uid)
+        except(TypeError, ValueError, OverflowError, User.DoesNotExist):
+            user = None
+        if user is not None and account_activation_token.check_token(user, token):
+            user.is_active = True
+            user.save()
+            login(request, user)
+            # return redirect('home')
+            return HttpResponse('Thank you for your email confirmation. Now you can login your account.')
+        else:
+            return HttpResponse('Activation link is invalid!')
 
 class EmployeeApiView(View):
     def post(self, request):

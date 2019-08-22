@@ -11,5 +11,7 @@ urlpatterns = [
          name='employer_dashboard'),
     path('employeeApi/', views.EmployeeApiView.as_view(), name='employee_api'),
     path('userApi/', views.UserApiView.as_view(), name='user_api'),
+    ###activate reverse
+    path('activate/(?P<uidb64>[0-9A-Za-z_\-]+)/(?P<token>[0-9A-Za-z]{1,13}-[0-9A-Za-z]{1,20})/$', views.Activate.as_view(), name='activate'),
 
 ]

@@ -33,6 +33,16 @@ USERNAME_FIELD = 'email'
 AUTH_PROFILE_MODULE = 'users.UserProfile'
 ACCOUNT_SIGNUP_FORM_CLASS = 'frontend.forms.SignUpForm'
 
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_USE_TLS = True
+EMAIL_PORT = 587
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_HOST_USER = 'kaziquest.test@gmail.com'
+EMAIL_HOST_PASSWORD = 'Admin123??'
+EMAIL_PORT = 587
+
+
 # Application definition
 
 INSTALLED_APPS = [

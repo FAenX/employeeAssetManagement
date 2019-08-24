@@ -10,6 +10,10 @@ import json
 from django.db import transaction
 
 
+from django.views.decorators.csrf import csrf_exempt
+from django.utils.decorators import method_decorator
+
+
 from django.contrib.sites.shortcuts import get_current_site
 from django.utils.encoding import force_bytes, force_text
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
@@ -19,44 +23,50 @@ from frontend.tokens import account_activation_token
 from django.core.mail import EmailMessage
 
 # Create your views here.
-from company_assets.models import Asset
+from company_assets.models import Asset, AssetManagement
 from users.models import EmployeeProfile
 
 #get user model
 User = get_user_model()
 
-class EmployerDashboardView(TemplateView):
+class DashboardView(TemplateView):
     template_name = 'employer_dashboard.html'
-
     def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        employees = User.objects.filter(is_employee=True)
-        assets = Asset.objects.all()
-        context['employees'] = employees
-        context['assets'] = assets
-        return context
-
+        if self.request.user.is_employer:
+            context = super().get_context_data(**kwargs)
+            employees = EmployeeProfile.objects.filter(created_by=self.request.user.id)
+            assets = Asset.objects.all()
+            context['employees'] = employees
+            context['assets'] = assets
+            return context
+        elif self.request.user.is_employee:
+            pass
 
 # accounts
 class LoginView(View):
     ''' login '''
-
-    def post(self, request):
+    def post(self):
         data = json.loads(self.request.body)
         email = data['email']
-        password = data['password']
+        password = data['password']      
         user = authenticate(email=email, password=password)
-        if user:
-            if user.is_active:
-                login(request, user)
-                return HttpResponse(200)
-            else:
-                return HttpResponse("Your account was inactive.")
-        else:
+        print(user)
+        try:
+            if user:
+                if user.is_active:
+                    login(request, user)
+                    return JsonResponse(200, safe=False)
+                else:
+                    return JsonResponse("Your account was inactive.", safe=False)
+            
+            elif not user and User.objects.get(email=data['email']):
+                return JsonResponse("Your account is inactive. Please activate your account by following the link in your email", safe=False)
+
+        except:
             print("Someone tried to login and failed.")
             print("They used username: {} and password: {}".format(email, password))
-            return HttpResponse("Invalid login details given")
-
+            return JsonResponse("Invalid login details given", safe=False)
+                
 #logout view
 class logoutView(View):
     '''logout view'''
@@ -68,18 +78,17 @@ class logoutView(View):
 class CreateEmployee(View):
     ''' sign up '''
     @transaction.atomic
-    def post(self, request):
+    def post(self):
         data = json.loads(self.request.body)
         print(data)
         print(self.request.user.id)
         try:
             user = User.objects.create_user(email=data['email'], password=data['password'], 
                                             first_name=data['first_name'], last_name=data['last_name'], 
-                                            is_employee = True)      
+                                            is_employee = True, is_active=False)      
             
             user_profile = EmployeeProfile.objects.get_or_create(user=user, created_by=self.request.user.id)
             #print(user_profile)
-            user.is_active = False
             current_site = get_current_site(self.request)
             mail_subject = 'Activate your blog account.'
             message = render_to_string('email_template.html', {
@@ -93,19 +102,17 @@ class CreateEmployee(View):
                         mail_subject, message, to=[to_email]
             )
             email.send()
-            return JsonResponse('Please confirm your email address to complete the registration', safe=False)
-        
+            return JsonResponse(200, safe=False)
+
         except Exception as e:
             print('Exception:', e)            
             return JsonResponse(str(e), safe=False)
-
-        
 
 #employer sign up view
 class CreateEmployer(View):
     ''' sign up '''
     @transaction.atomic
-    def post(self, request):
+    def post(self):
         data = json.loads(self.request.body)
         print(data)
         print(self.request.user.id)
@@ -113,18 +120,32 @@ class CreateEmployer(View):
         try:
             user = User.objects.create_user(email=data['email'], password=data['password'], 
                                             first_name=data['first_name'], last_name=data['last_name'], 
-                                            is_employer = True)
+                                            is_employer = True, is_active=False)
             
-            return HttpResponse(200)
+            #return HttpResponse(200)
+            current_site = get_current_site(self.request)
+            mail_subject = 'Activate your blog account.'
+            message = render_to_string('email_template.html', {
+                'user': user,
+                'domain': current_site.domain,
+                'uid':urlsafe_base64_encode(force_bytes(user.pk)),
+                'token':account_activation_token.make_token(user),
+            })
+            to_email = data['email']
+            email = EmailMessage(
+                        mail_subject, message, to=[to_email]
+            )
+            email.send()
+            return JsonResponse(200, safe=False)
+        
         except Exception as e:
-            print('Exception:', e)
-            
+            print('Exception:', e)            
             return JsonResponse(str(e), safe=False)
 
-#activate url
+#activate user endpoint
 class Activate(View):
     '''activate'''
-    def activate(self, request, uidb64, token):
+    def get(self, request, uidb64, token):
         try:
             uid = force_text(urlsafe_base64_decode(uidb64))
             user = User.objects.get(pk=uid)
@@ -139,17 +160,38 @@ class Activate(View):
         else:
             return HttpResponse('Activation link is invalid!')
 
-class EmployeeApiView(View):
-    def post(self, request):
-        employee_id = json.loads(self.request.body)['employee_id']
-        employee = User.objects.filter(id=employee_id)
-        serialized_object = serializers.serialize('json', employee)
-        print(type(serialized_object))
-        return JsonResponse(serialized_object, safe=False)
+#password reset veiw
+class PasswordRest(View):
+    ''' reset user password '''
 
-class UserApiView(View):
-    def get(self, request):
-        return User
+
+
+#return employee basic information
+class EmployeeView(View):
+    ''' view employee personal details '''
+    def post(self, request):
+        employee_profile_id = json.loads(self.request.body)['employee_id']        
+        employee = User.objects.filter(employeeprofile=employee_profile_id)        
+        print('------')
+        serialized_employee = serializers.serialize('json', employee)
+        print(serialized_employee)
+
+        return JsonResponse(serialized_employee, safe=False)
+
+
+
+#return assets given to the employee
+class EmployeeAssetsView(View):
+    ''' view assets given to employee '''
+    def post(self, request):
+        employee_profile_id = json.loads(self.request.body)['employee_id']        
+        employee = User.objects.filter(employeeprofile=employee_profile_id)
+        assets = AssetManagement.objects.filter(user=employee[0])
         
+        serialized_assets = serializers.serialize('json', assets)
+        print(serialized_assets)
+
+        return JsonResponse(serialized_assets, safe=False)
+
 
         

@@ -1,6 +1,9 @@
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
 from django.urls import reverse
+from django.contrib.auth import get_user_model
+
+User = get_user_model()
 
 # Create your models here.
 
@@ -12,11 +15,25 @@ class Asset(models.Model):
         asset_description = models.CharField(_('Asset description'), max_length=200)
         slug = models.SlugField()
     
-        #product absolute url
-        def get_absolute_url(self):
-            return reverse("detail", kwargs={"slug": self.slug})    
-    
         # string representation of the product
         def __str__(self):
             return self.asset_name
+
+class AssetInstance(models.Model):
+    asset = models.ForeignKey(Asset, on_delete=models.SET_NULL, null=True)
+    availability = models.BooleanField(default=False)
+    asset_number = models.CharField(_('Asset/Asset Number'), max_length=20)
+
+    class Meta:
+        ordering = ['availability']
+
+    def __str__(self):
+        return f'{self.asset.asset_name} {self.asset_number}'
+
+class AssetManagement(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    asset_instance = models.ForeignKey(AssetInstance, on_delete=models.CASCADE)
+
+    def __repr__(self):
+        return f'{self.asset_instance}'
     

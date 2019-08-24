@@ -29,11 +29,14 @@
         </div>  
         <div admin-nav-item>
             <p add-employee-button class="button">add employee</p> 
-            <p view-all-assets-button class="button"> view all assets </p>           
+            <p view-all-assets-button class="button"> view all assets </p> 
+            <p edit-button class="button">Edit profile</p>
+          
         </div>         
     </div>
-    <div employer-data>
-        <div employee-list>
+    <!-- data container-->
+    <div data-container>
+        <div class="user-data" style="display: block" employer-data>
             {% for employee in employees %}
             <div employee>
                 <div employee-info>
@@ -44,7 +47,7 @@
                         <div class="u-info">
                             <p class="u-info-item">{{ employee }}</p>
                             <p class="u-info-item">{{ employee.first_name}} {{employee.last_name}}</p>
-                            <p class="u-info-item">Item3</p>
+                            <p class="u-info-item">{{ employee.id}}</p>
                         </div>
                         <div employee-has-assets>
                             <span items-count></span>
@@ -59,10 +62,18 @@
                 </div>
             </div>
             {% endfor %}
-            
-        </div>     
-        
+        </div>
+         <!-- employee data-->
+        <div class="user-data" style="display: block" employee-data>
+            <div class="asset">
+
+            </div>
+            <div class="asset">
+
+            </div>
+        </div>
     </div>
+    
 </div>
 <!-- add employee modal -->
 <div class="signup-form" add-employee-form>
@@ -87,7 +98,7 @@
     <span class="close-btn">&times;</span>
     <h3> Company Assets</h3>
     {% for asset in assets %}
-    <div asset>
+    <div class="asset">
         <div class="p-picture">
             <img src="/static/mouse.jpg"/>
         </div>
@@ -113,19 +124,33 @@
             <p id="date-of-birth"></p>
             <p id="id-number"></p>
             <p id="date-joined"></p>
+            <p id="employee-id" style="display: block"></p>
+        </div>
+        <div view-assets-button>{%csrf_token%}
+            <p class="button">view assets</p> 
+        </div>
+        <div assigned-assets>
+            <div class="asset">
+                <span></span>
+            </div>
+            <div asset>
+                <span></span>
+            </div>
         </div>
         
 </div>   
 
 <!-- login modal-->
 <div login-container> 
+    <h3 class="modal-title"> Login</h3>
+    <span id="error-message"></span>
     <div login-form>
         <form login>{% csrf_token %}
           <input type="text"  id="login" name="email_address" placeholder="Email Address">
           <input type="text" id="password" name="password" placeholder="Password">
         </form>
     </div>  
-    <div class="login">
+    <div login-signup-buttons>
         <button class="button" login-button > Login </button>
         <button class="button" signup-button > signup </button>
     </div>   

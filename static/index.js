@@ -1,19 +1,38 @@
 // getEmployeeId
-const getEmployeeId = () =>{
+const getEmployeeData = () =>{
     let target = event.target;
     let employeeId = target.parentNode.childNodes[3].innerText;
     let data = {'employee_id':employeeId}
     let csrfToken = target.parentNode.childNodes[5].value;
-    let url = 'http://127.0.0.1:8000/home/employeeApi/';
+    let url = 'http://127.0.0.1:8000/home/employee-info/';
     postData(url, data, csrfToken)
-    .then(data => popEmployee(JSON.parse(data))) // JSON-string from `response.json()` call
+    .then(response=> {
+        popEmployee(JSON.parse(response), employeeId);
+        console.log(response);
+    }) 
     .catch(error => console.error(error));
-    //console.log(employeeData);    
+   
+};
+
+//employee assets ajax request
+const getEmployeeAssets =() =>{    
+    let id = document.querySelector('[personal-details] #employee-id').innerText
+    let data = {'id':id};
+    //let csrfToken = document.querySelector('[view-assets-button] input').value
+    let csrfToken = document.cookie.split(';')[0].split('=')[1];
+    console.log(csrfToken);
+    let url = 'http://127.0.0.0.1:8000/home/employee-assets/'
+
+    postData(url, data, csrfToken)
+    .then(response =>{
+        console.log(response);
+    })
+    
 };
 
 //pop employee details modal
-const popEmployee = (employeeData) =>{
-    console.log(employeeData[0]['fields']);    
+const popEmployee = (employeeData, employeeId) =>{
+    console.log(employeeData);    
     document.querySelector('[personal-details] #full-name').innerText = `Full Name: ${employeeData[0]['fields']['first_name']} ${employeeData[0]['fields']['last_name']}`;
     document.querySelector('[personal-details] #email-address').innerText = `Email Address: ${employeeData[0]['fields']['email']}`;
     document.querySelector('[personal-details] #contact-number').innerText= `Phone Number: ${employeeData[0]['fields']['contact_number']}`;
@@ -21,6 +40,7 @@ const popEmployee = (employeeData) =>{
     document.querySelector('[personal-details] #date-joined').innerText= `Date Joined: ${employeeData[0]['fields']['date_joined']}`;
     document.querySelector('[personal-details] #date-of-birth').innerText = `D.O.B: ${employeeData[0]['fields']['date_of_birth']}`;
     document.querySelector('[personal-details] #id-number').innerText= `ID-Number: ${employeeData[0]['fields']['id_number']}`;
+    document.querySelector('[personal-details] #employee-id').innerText= employeeId;
     console.log(document.querySelector('[personal-details] #full-name'));
     showEmployeeDetails();
     fadeAdminNav();
@@ -30,7 +50,8 @@ const popEmployee = (employeeData) =>{
 //sign up data
 const createEmployee =()=>{
     let errorField = document.querySelector('[add-employee-form] #error-message')
-    let csrfToken = document.querySelector('[add-employee-form] input:nth-child(1)').value;
+    //let csrfToken = document.querySelector('[add-employee-form] input:nth-child(1)').value;
+    let csrfToken = document.cookie.split(';')[0].split('=')[1];
     let email = document.querySelector('[add-employee-form] #email_address').value;
     let firstName = document.querySelector('[add-employee-form] #first_name').value;
     let LastName = document.querySelector('[add-employee-form] #last_name').value;
@@ -39,8 +60,11 @@ const createEmployee =()=>{
     const url = 'http://127.0.0.1:8000/home/employee-signup/';
     postData(url, data, csrfToken)
     .then(response => {
-        console.log(response); 
-        showSignupError(errorField ,response);
+        if (response == 200) {
+           location.reload()
+        }else{
+            showSignupError(errorField ,response);
+        }
     })
 };
 
@@ -56,8 +80,12 @@ const createEmployer =()=>{
     const url = 'http://127.0.0.1:8000/home/employer-signup/';
     postData(url, data, csrfToken)
     .then(response => {
-        console.log(response); 
-        showSignupError(errorField, response);
+        if(response==200){
+            location.reload()
+        }else{
+            showSignupError(errorField, response);
+
+        }
     })
 };
 
@@ -96,15 +124,26 @@ const login = () => {
     let password = document.querySelector('[login] input:nth-child(3)').value;
     let data = {'email':email, 'password':password};
 
+    //error
+    const errorField = document.querySelector('[login-container] #error-message');
+    
+
     const url = 'http://127.0.0.1:8000/home/login/';
     postData(url, data, csrfToken)
-    .then(data => onLogin(JSON.parse(data))) // JSON-string from `response.json()` call
-    .then(data => {
-        onLogin(data)  
-    })
-    .catch(error => console.error(error));
-    
+    .then(response => {
+        if(response==200){
+            onLogin(JSON.parse(response)); // JSON-string from `response.json()` call
+            isLogedIn();
+            console.log(response);
+            return true;
+        }else{
+            showSignupError(errorField, response);
+            return false;    
+        }         
+    })     
+    .catch(error => console.error(error));    
     };
+    
 
 
 // post request
@@ -291,6 +330,7 @@ const closeBtnEvent =()=>{
     hideEmployeeDetails();
     hideEmployerSignup();
     isLogedIn();
+    location.reload();
 };
 
 // add event listeners
@@ -304,7 +344,9 @@ const addEventListeners = () =>{
     const navLogoutBtn = document.querySelector('[nav-bar-logout-button]');
     const showEmployerSignUpBtn = document.querySelector('[signup-button]');
     const addEmployeeButton = document.querySelector('[add-employee-button]');
+    const viewEmployeeAssets = document.querySelector('[view-assets-button]');
 
+    viewEmployeeAssets.addEventListener('click', getEmployeeAssets)
     addEmployeeButton.addEventListener('click', showAddEmployeeForm);
     loginBtn.addEventListener('click', login);
     navLogoutBtn.addEventListener('click', logout);
@@ -318,7 +360,7 @@ const addEventListeners = () =>{
         
     });
     showEmployeeDetailsBtn.forEach(element =>{
-        element.addEventListener('click', getEmployeeId);
+        element.addEventListener('click', getEmployeeData);
     });
 };
 

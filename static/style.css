@@ -54,6 +54,10 @@ input[type=text], select {
   height: 150px;
   width: 150px;  
 }
+.modal-title {
+  text-align: center;
+}
+
 
 [add-employee-form] h3{
   text-align: center;
@@ -98,11 +102,11 @@ input[type=text], select {
 }
 
 [logo] img{
-display: fixed;
-position: absolute;
-width: 100px;
-height: 100px;
-}
+  display: fixed;
+  position: absolute;
+  width: 100px;
+  height: 100px;
+  }
 
 [login-container] {
     background-color: rgba(156, 233, 216, 0.4);
@@ -119,13 +123,17 @@ height: 100px;
 
 [login-form]{
   text-align: center;
-  margin-top: 40px;
+  margin-top: 20px;
 }
 
 [login-form] input{
   width: 90%;
   padding: 10px;
   margin: 10px;
+}
+
+[login-signup-buttons]{
+  margin: 0 auto;
 }
 
 [footer]{
@@ -165,7 +173,7 @@ height: 100px;
 }
 /* employee stats */
 
-[employer-data]{
+[data-container]{
   position: relative;
   min-height: 200px;
   margin-left: 20px;
@@ -176,7 +184,7 @@ height: 100px;
   border-left: 1px solid rgb(200, 243, 239);
 }
 
-[employee-list]{
+.user-data {
   position: relative;
   min-height: 300px;
   width: 95%;
@@ -261,7 +269,7 @@ height: 100px;
 
 }
 
-[asset]{
+.asset {
   min-height: 220px;
   width: 210px;
   margin-top: 10px;

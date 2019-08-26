@@ -11,7 +11,7 @@ urlpatterns = [
          name='dashboard'),
 
     #employee endpoints
-    path('employee-info/', views.EmployeeView.as_view(), name='employee_api'),
+    path('employee-info/', views.EmployeeView.as_view(), name='employee_info'),
     path('employee-signup/', views.CreateEmployee.as_view(), name="create_employee"),
     path('employee-assets/', views.EmployeeAssetsView.as_view, name='employee_assets'),
     

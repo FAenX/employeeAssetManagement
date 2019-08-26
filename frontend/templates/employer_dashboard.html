@@ -24,7 +24,8 @@
                 <p class="u-info-item">{{ user.email }}</p>
                 <p class="u-info-item">{{user.first_name}} {{user.last_name}}</p>
                 <p class="u-info-item">{{ user.employerprofile.position }}</p>
-                <span style="display: none;" logged-in-user-id>{{user.id}}</span>
+                <span style="display: block;" logged-in-user-id>{{user.id}}</span>
+                <span style="display: block;" logged-in-is_employer>{{user.is_employer}}</span>
             </div>
         </div>  
         <div admin-nav-item>
@@ -37,7 +38,7 @@
     <!-- data container-->
     <div data-container>
         <div class="user-data" style="display: block" employer-data>
-            {% for employee in employees %}
+            {% for employee in object_list %}
             <div employee>
                 <div employee-info>
                     <div employee-profile-picture>
@@ -64,13 +65,21 @@
             {% endfor %}
         </div>
          <!-- employee data-->
-        <div class="user-data" style="display: block" employee-data>
+        <div class="user-data" style="display: none" employee-data>
+            {% for asset in assets%}
             <div class="asset">
-
+                <div class="p-picture">
+                    <img src="/static/mouse.jpg"/>
+                </div>
+                <div class="asset-info">
+                    <div class="u-info">
+                        <p class="u-info-item">{{asset}}</p>
+                        <p class="u-info-item">{{asset.date_given}}</p>
+                        <p class="u-info-item">{{asset.return_date}}</p>
+                    </div>
+                </div>  
             </div>
-            <div class="asset">
-
-            </div>
+            {% endfor %}
         </div>
     </div>
     
@@ -130,12 +139,11 @@
             <p class="button">view assets</p> 
         </div>
         <div assigned-assets>
+            
             <div class="asset">
                 <span></span>
             </div>
-            <div asset>
-                <span></span>
-            </div>
+           
         </div>
         
 </div>   

@@ -1,4 +1,4 @@
-from django.views.generic import TemplateView
+from django.views.generic import ListView
 from django.shortcuts import render_to_response
 from django.shortcuts import render, reverse
 from django.views import View
@@ -29,23 +29,27 @@ from users.models import EmployeeProfile
 #get user model
 User = get_user_model()
 
-class DashboardView(TemplateView):
+class DashboardView(ListView):
     template_name = 'employer_dashboard.html'
+
+    def get_queryset(self):
+        return EmployeeProfile.objects.filter(created_by=self.request.user.id)
+
     def get_context_data(self, **kwargs):
-        if self.request.user.is_employer:
-            context = super().get_context_data(**kwargs)
-            employees = EmployeeProfile.objects.filter(created_by=self.request.user.id)
-            assets = Asset.objects.all()
-            context['employees'] = employees
-            context['assets'] = assets
-            return context
-        elif self.request.user.is_employee:
-            pass
+        context = super().get_context_data(**kwargs)        
+                   
+        employees = EmployeeProfile.objects.filter(created_by=self.request.user.id)
+        context['employees'] = employees
+
+        my_assets = AssetManagement.objects.filter(given_to=self.request.user.id)
+        context['assets']=my_assets
+        return context
+       
 
 # accounts
 class LoginView(View):
     ''' login '''
-    def post(self):
+    def post(self, request):
         data = json.loads(self.request.body)
         email = data['email']
         password = data['password']      
@@ -78,7 +82,7 @@ class logoutView(View):
 class CreateEmployee(View):
     ''' sign up '''
     @transaction.atomic
-    def post(self):
+    def post(self, request):
         data = json.loads(self.request.body)
         print(data)
         print(self.request.user.id)
@@ -112,7 +116,7 @@ class CreateEmployee(View):
 class CreateEmployer(View):
     ''' sign up '''
     @transaction.atomic
-    def post(self):
+    def post(self, request):
         data = json.loads(self.request.body)
         print(data)
         print(self.request.user.id)

@@ -68,6 +68,19 @@ const createEmployee =()=>{
     })
 };
 
+//check the type of user logged in
+const checkUserType =()=>{
+    const isEmployer = document.querySelector('[logged-in-is_employer]').textContent;
+    console.log(isEmployer);
+    if (isEmployer == 'False'){
+        document.querySelector('[employer-data]').style.display = 'none';
+        document.querySelector('[employee-data]').style.display = 'block';
+        document.querySelector('[add-employee-button]').style.display = 'none';
+        document.querySelector('[view-all-assets-button]').style.display = 'none';
+    }
+
+};
+
 //create employer
 const createEmployer =()=>{
     let errorField = document.querySelector('[employer-signup-form] #error-message')
@@ -174,6 +187,7 @@ const isLogedIn = ()=>{
     if (userId != 'None'){
         console.log('isLogedIn');
         console.log(userId);
+        checkUserType();
         saveUserToLocalStorage();
         return true;
 

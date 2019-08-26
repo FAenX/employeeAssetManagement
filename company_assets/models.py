@@ -31,8 +31,10 @@ class AssetInstance(models.Model):
         return f'{self.asset.asset_name} {self.asset_number}'
 
 class AssetManagement(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    given_to = models.ForeignKey(User, on_delete=models.CASCADE)
     asset_instance = models.ForeignKey(AssetInstance, on_delete=models.CASCADE)
+    date_given = models.DateTimeField()
+    date_expezted_back = models.DateTimeField()
 
     def __repr__(self):
         return f'{self.asset_instance}'

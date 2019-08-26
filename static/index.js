@@ -61,24 +61,11 @@ const createEmployee =()=>{
     postData(url, data, csrfToken)
     .then(response => {
         if (response == 200) {
-           location.reload()
+           isLogedIn();
         }else{
             showSignupError(errorField ,response);
         }
     })
-};
-
-//check the type of user logged in
-const checkUserType =()=>{
-    const isEmployer = document.querySelector('[logged-in-is_employer]').textContent;
-    console.log(isEmployer);
-    if (isEmployer == 'False'){
-        document.querySelector('[employer-data]').style.display = 'none';
-        document.querySelector('[employee-data]').style.display = 'block';
-        document.querySelector('[add-employee-button]').style.display = 'none';
-        document.querySelector('[view-all-assets-button]').style.display = 'none';
-    }
-
 };
 
 //create employer
@@ -94,7 +81,7 @@ const createEmployer =()=>{
     postData(url, data, csrfToken)
     .then(response => {
         if(response==200){
-            location.reload()
+            isLogedIn();
         }else{
             showSignupError(errorField, response);
 
@@ -107,6 +94,8 @@ const showSignupError =(errorField, error)=>{
     errorField.textContent = error;
     
 };
+
+//waiting for page to reload
 
 //is loged out
 const logout =()=>{
@@ -125,7 +114,6 @@ const logout =()=>{
     .then(response => {
         onLogout(response);
     })
-    .then(response => console.log(response))
     .catch(err => console.log(err));
 
 };
@@ -146,7 +134,7 @@ const login = () => {
     .then(response => {
         if(response==200){
             onLogin(JSON.parse(response)); // JSON-string from `response.json()` call
-            isLogedIn();
+            checkUserType();
             console.log(response);
             return true;
         }else{
@@ -179,25 +167,43 @@ const postData = (url, data, csrfToken) =>{
     .then(response => response.json())
     };
 
+//check the type of user logged in
+const checkUserType =()=>{
+    const isEmployer = document.querySelector('[logged-in-is_employer]').textContent;
+    console.log(isEmployer);
+    if (isEmployer == 'False'){
+        document.querySelector('[employer-data]').style.display = 'none';
+        document.querySelector('[employee-data]').style.display = 'block';
+        document.querySelector('[add-employee-button]').style.display = 'none';
+        isLogedIn();
+        return false;
+    } else if(isEmployer == 'True') {
+        isLogedIn();
+        return true;
+    } else if(isEmployer == ''){
+        isLogedOut();
+        document.querySelector("[loader]").style.display = "none";
+        return false;
+    }
+
+};
 
 //is the user logged in?
 const isLogedIn = ()=>{
     //let user = JSON.parse(localStorage.getItem('user')); 
-    let userId = document.querySelector('[logged-in-user-id').textContent;
-    if (userId != 'None'){
-        console.log('isLogedIn');
-        console.log(userId);
-        checkUserType();
-        saveUserToLocalStorage();
-        return true;
+    let userId = document.querySelector('[logged-in-user-id').textContent;    
+    console.log('isLogedIn');
+    console.log(userId);
+    saveUserToLocalStorage();
+    setTimeout(loader, 700);
+    return true;
+};
 
-    }else{
-        console.log(userId);
-        removeUserFromLocalStorage();
-        showLoginModal();
-        return false;
-    }  
-
+//is logged out
+const isLogedOut =()=>{   
+    removeUserFromLocalStorage();
+    showLoginModal();
+    return true; 
 };
 
 //on login
@@ -210,7 +216,7 @@ const onLogin = (data) =>{
 //on login
 const onLogout = (data) =>{
     console.log(data);
-    location.reload();     
+    location.reload(); 
     return true; 
 };
 
@@ -387,13 +393,20 @@ const randomPass =(length)=> {
         result += characters.charAt(Math.floor(Math.random() * charactersLength));
     }
     return result;
-    
-     
+   
+};
+
+//loader content
+const loader =()=>{
+    document.querySelector("[loader]").style.display = "none";
+    document.querySelector("[profile-container]").style.display = "block";
 };
 
 //statr app
 startApp = () =>{    
-    isLogedIn();
+    checkUserType();
     addEventListeners();
 };
 startApp();
+
+

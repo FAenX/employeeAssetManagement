@@ -24,8 +24,61 @@ input[type=text], select {
   text-align: center;
 }
 .button:hover {
-  background-color: #45a049;
+  background-color: #033306;
 }
+
+/* loader animation */
+[loader] {
+  position: fixed;
+  left: 50%;
+  top: 50%;
+  z-index: 1;
+  width: 150px;
+  height: 150px;
+  margin: -75px 0 0 -75px;
+  border: 16px solid #f3f3f3;
+  border-radius: 50%;
+  border-top: 16px solid #4CAF50;
+  width: 50px;
+  height: 50px;
+  -webkit-animation: spin 2s linear infinite;
+  animation: spin 2s linear infinite;
+}
+
+@-webkit-keyframes spin {
+  0% { -webkit-transform: rotate(0deg); }
+  100% { -webkit-transform: rotate(360deg); }
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* Add animation to "page content" */
+.animate-bottom {
+  position: absolute;
+  -webkit-animation-name: animatebottom;
+  -webkit-animation-duration: 1s;
+  animation-name: animatebottom;
+  animation-duration: 1s
+}
+
+@-webkit-keyframes animatebottom {
+  from { bottom:-100px; opacity:0 } 
+  to { bottom:0px; opacity:1 }
+}
+
+@keyframes animatebottom { 
+  from{ bottom:-100px; opacity:0 } 
+  to{ bottom:0; opacity:1 }
+}
+
+[profile-container] {
+  display: none;  
+}
+
+/* end of loader animation */
 
 .close-btn{
   cursor: pointer;
@@ -61,7 +114,6 @@ input[type=text], select {
 
 [add-employee-form] h3{
   text-align: center;
-
 }
 
 [nav-bar] {
@@ -85,12 +137,11 @@ input[type=text], select {
   margin-right: 50px;
   width: 30px;
   height: 20px;
-  font-size: 15px;
-  
+  font-size: 15px;  
 }
 
-[nav-bar-logout]{
-  display: block;
+[nav-bar-items] p{
+  text-align: center;
 }
 
 [logo]{
@@ -109,21 +160,20 @@ input[type=text], select {
   }
 
 [login-container] {
-    background-color: rgba(156, 233, 216, 0.4);
+    background-color: rgba(171, 248, 232, 0.4);
     width: 400px;
     display: none;
     height: 300px;
     margin: 0 auto;
-    position: absolute;
-    left: 50%;
-    top: 50%;
-    transform: translate(-50%, -50%);   
-    border-radius: 15px;
+    position: relative;
+    top: 50%;    
+    border-radius: 15px;    
 }
 
 [login-form]{
   text-align: center;
   margin-top: 20px;
+  margin: 0 auto;
 }
 
 [login-form] input{
@@ -133,6 +183,7 @@ input[type=text], select {
 }
 
 [login-signup-buttons]{
+  text-align: center;
   margin: 0 auto;
 }
 
@@ -153,13 +204,12 @@ input[type=text], select {
 }
 
 [Admin-nav]{
-  left: 10px;
+  left: 1px;
   top: 10px;
   width: 250px;
   height: 400px;
-  position: relative;
+  position: absolute;
   background: transparent;
-  text-align: center;
   border-radius: 10px;
   vertical-align: middle;
   padding-bottom: 10px;
@@ -175,13 +225,14 @@ input[type=text], select {
 
 [data-container]{
   position: relative;
+  left: 20%;
   min-height: 200px;
   margin-left: 20px;
   margin-top: 10px;
   margin-bottom: 10px;
   margin-right: 5px;
   width: 80%;
-  border-left: 1px solid rgb(200, 243, 239);
+  border-left: 1px solid #4CAF50;
 }
 
 .user-data {
@@ -293,7 +344,7 @@ input[type=text], select {
   margin: 0 auto;
   z-index: 1;
   display: none;
-  position: fixed;
+  position: absolute;
   top: 0;
   left: 25%;
   border: 1px solid rgb(207, 241, 234);

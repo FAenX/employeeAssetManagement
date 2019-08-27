@@ -1,9 +1,7 @@
 body {
     font-size: 15px;
-   
-
 }
-input[type=text], select {
+input {
   width: 100%;
   padding: 12px 20px;
   margin: 8px 0;
@@ -111,10 +109,30 @@ input[type=text], select {
   text-align: center;
 }
 
+.signup-form {
+  margin: 0 auto;
+  display: none;
+  border: 1px solid gray;
+  border-radius: 20px;
+  padding: 20px;
+}
 
-[add-employee-form] h3{
+
+[add-employee-modal] {
+  background-color: rgba(171, 248, 232, 0.4);
+  width: 400px;
+  height: 400px;
+  position: relative;  
+}
+
+[add-employee-modal] h3 {
+  text-align: center; 
+}
+
+[submit-add-employee-button]{
   text-align: center;
 }
+
 
 [nav-bar] {
   background: none;
@@ -163,15 +181,18 @@ input[type=text], select {
     background-color: rgba(171, 248, 232, 0.4);
     width: 400px;
     display: none;
-    height: 300px;
     margin: 0 auto;
-    position: relative;
-    top: 50%;    
+    position: relative; 
     border-radius: 15px;    
 }
 
-[login-form]{
+[login-container] h3{
   text-align: center;
+  padding-top: 10px;
+}
+
+[login-form]{
+  padding: 10px;
   margin-top: 20px;
   margin: 0 auto;
 }
@@ -237,14 +258,14 @@ input[type=text], select {
 
 .user-data {
   position: relative;
-  min-height: 300px;
+  min-height: 700px;
   width: 95%;
   margin: 0 auto;
   margin-top: 5px;
   margin-bottom: 5px;
-  border-radius: 10px;
   border-left: 1px solid #4CAF50;
 }
+
 [employee]{
   min-height: 250px;
   width: 200px;
@@ -287,21 +308,6 @@ input[type=text], select {
   width: 75px;
   margin: 0 auto;
 }
-
-.signup-form {
-  width: 400px;
-  margin: 0 auto;
-  display: none;
-  position: fixed;
-  top: 10%;
-  left: 30%;
-  border: 1px solid gray;
-  border-radius: 20px;
-  background-color: rgba(156, 233, 216, 0.4); /* Black w/ opacity */
-  padding: 20px;
-  margin-top: 10px;
-}
-
 
 /*assets */
 [assets-all-container]{
@@ -360,15 +366,14 @@ input[type=text], select {
 }
 
 [employer-signup-form]{
-  width: 400px;
-  margin: 0 auto;
-  display: none;
-  position: fixed;
-  top: 10%;
-  left: 30%;
-  border: 1px solid gray;
-  border-radius: 20px;
-  background-color: rgba(156, 233, 216, 0.4); /* Black w/ opacity */
-  padding: 20px;
-  margin-top: 10px;
+    background-color: rgba(171, 248, 232, 0.4);
+    width: 400px;
+    display: none;
+    position: relative;  
+    
+  
+}
+
+[submit-add-employer-button]{
+  text-align: center;
 }

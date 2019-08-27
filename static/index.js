@@ -3,7 +3,7 @@ const getEmployeeData = () =>{
     let target = event.target;
     let employeeId = target.parentNode.childNodes[3].innerText;
     let data = {'employee_id':employeeId}
-    let csrfToken = target.parentNode.childNodes[5].value;
+    let csrfToken = document.cookie.split(';')[0].split('=')[1];
     let url = 'http://127.0.0.1:8000/home/employee-info/';
     postData(url, data, csrfToken)
     .then(response=> {
@@ -18,7 +18,6 @@ const getEmployeeData = () =>{
 const getEmployeeAssets =() =>{    
     let id = document.querySelector('[personal-details] #employee-id').innerText
     let data = {'id':id};
-    //let csrfToken = document.querySelector('[view-assets-button] input').value
     let csrfToken = document.cookie.split(';')[0].split('=')[1];
     console.log(csrfToken);
     let url = 'http://127.0.0.0.1:8000/home/employee-assets/'
@@ -49,19 +48,18 @@ const popEmployee = (employeeData, employeeId) =>{
 
 //sign up data
 const createEmployee =()=>{
-    let errorField = document.querySelector('[add-employee-form] #error-message')
-    //let csrfToken = document.querySelector('[add-employee-form] input:nth-child(1)').value;
+    let errorField = document.querySelector('[add-employee-modal] #error-message')
     let csrfToken = document.cookie.split(';')[0].split('=')[1];
-    let email = document.querySelector('[add-employee-form] #email_address').value;
-    let firstName = document.querySelector('[add-employee-form] #first_name').value;
-    let LastName = document.querySelector('[add-employee-form] #last_name').value;
+    let email = document.querySelector('[add-employee-form] #employee_email_address').value;
+    let firstName = document.querySelector('[add-employee-form] #employee_first_name').value;
+    let LastName = document.querySelector('[add-employee-form] #employee_last_name').value;
     let randomPassword = randomPass(10);
     let data = {'first_name':firstName, 'last_name': LastName, 'email':email, 'password': randomPassword};
     const url = 'http://127.0.0.1:8000/home/employee-signup/';
     postData(url, data, csrfToken)
     .then(response => {
         if (response == 200) {
-           isLogedIn();
+           checkUserType();
         }else{
             showSignupError(errorField ,response);
         }
@@ -71,17 +69,17 @@ const createEmployee =()=>{
 //create employer
 const createEmployer =()=>{
     let errorField = document.querySelector('[employer-signup-form] #error-message')
-    let csrfToken = document.querySelector('[signup-form] input:nth-child(1)').value;
-    let email = document.querySelector('[signup-form] #email_address').value;
-    let firstName = document.querySelector('[signup-form] #first_name').value;
-    let LastName = document.querySelector('[signup-form] #last_name').value;
+    let csrfToken = document.cookie.split(';')[0].split('=')[1];
+    let email = document.querySelector('[signup-form] #employer_email_address').value;
+    let firstName = document.querySelector('[signup-form] #employer_first_name').value;
+    let LastName = document.querySelector('[signup-form] #employer_last_name').value;
     let password = document.querySelector('[signup-form] #raw_password').value;
     let data = {'first_name':firstName, 'last_name': LastName, 'email':email, 'password': password};
     const url = 'http://127.0.0.1:8000/home/employer-signup/';
     postData(url, data, csrfToken)
     .then(response => {
         if(response==200){
-            isLogedIn();
+           checkUserType();
         }else{
             showSignupError(errorField, response);
 
@@ -120,9 +118,9 @@ const logout =()=>{
 
 //login data
 const login = () => {
-    let csrfToken = document.querySelector('[login] input:nth-child(1)').value;
-    let email = document.querySelector('[login] input:nth-child(2)').value;
-    let password = document.querySelector('[login] input:nth-child(3)').value;
+    let csrfToken = document.cookie.split(';')[0].split('=')[1];
+    let email = document.querySelector('[login] #login_email').value;
+    let password = document.querySelector('[login] #login_password').value;
     let data = {'email':email, 'password':password};
 
     //error
@@ -178,6 +176,8 @@ const checkUserType =()=>{
         isLogedIn();
         return false;
     } else if(isEmployer == 'True') {
+        document.querySelector('[employer-data]').style.display = 'block';
+        document.querySelector('[employee-data]').style.display = 'none';
         isLogedIn();
         return true;
     } else if(isEmployer == ''){
@@ -285,16 +285,16 @@ const fadeEmployerData= () =>{
     document.querySelector('[employer-data]').style.opacity ='.3';
 };
 
-//show add-employee form
+//show add-employee modal
 const showAddEmployeeForm =()=>{
-    document.querySelector('[add-employee-form]').style.display ='block';
+    document.querySelector('[add-employee-modal]').style.display ='block';
     fadeAdminNav();
     fadeEmployerData();
 };
 
-//const hide add-employee form
+//const hide add-employee modal
 const hideAddEmployeeForm =()=>{
-    document.querySelector('[add-employee-form]').style.display ='none';
+    document.querySelector('[add-employee-modal]').style.display ='none';
 };
 
 //show admin nav container

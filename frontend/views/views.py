@@ -42,7 +42,7 @@ class DashboardView(ListView):
         context['employees'] = employees
 
         my_assets = AssetManagement.objects.filter(given_to=self.request.user.id)
-        context['assets']=my_assets
+        context['assets']= my_assets
         return context
        
 

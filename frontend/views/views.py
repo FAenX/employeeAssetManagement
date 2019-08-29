@@ -40,6 +40,7 @@ class DashboardView(ListView):
                    
         employees = EmployeeProfile.objects.filter(created_by=self.request.user.id)
         context['employees'] = employees
+        context['current_site'] = get_current_site(self.request).domain
 
         my_assets = AssetManagement.objects.filter(given_to=self.request.user.id)
         context['assets']= my_assets

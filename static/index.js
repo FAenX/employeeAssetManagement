@@ -1,6 +1,6 @@
 //get current location
 const getCurrentLocation =() => {
-    const currentLocation = document.querySelector('[current-location').value;
+    const currentLocation = document.querySelector('[current-location]').textContent;
     console.log(currentLocation);
     return currentLocation;
 };
@@ -11,7 +11,7 @@ const getEmployeeData = () =>{
     let employeeId = target.parentNode.childNodes[3].innerText;
     let data = {'employee_id':employeeId}
     let csrfToken = document.cookie.split(';')[0].split('=')[1];
-    let url = ` 'http://{getcurrentLocation}/home/employee-info/'`;
+    let url = `http://${currentLocation}/home/employee-info/`;
     postData(url, data, csrfToken)
     .then(response=> {
         popEmployee(JSON.parse(response), employeeId);
@@ -27,7 +27,7 @@ const getEmployeeAssets =() =>{
     let data = {'id':id};
     let csrfToken = document.cookie.split(';')[0].split('=')[1];
     console.log(csrfToken);
-    let url =  `'http://{getcurrentLocation}/home/employee-assets/'`
+    let url =  `http://${currentLocation}/home/employee-assets/`
 
     postData(url, data, csrfToken)
     .then(response =>{
@@ -62,7 +62,7 @@ const createEmployee =()=>{
     let LastName = document.querySelector('[add-employee-form] #employee_last_name').value;
     let randomPassword = randomPass(10);
     let data = {'first_name':firstName, 'last_name': LastName, 'email':email, 'password': randomPassword};
-    const url =  `'http://{getcurrentLocation}/home/employee-signup/'`;
+    const url =  `http://${currentLocation}/home/employee-signup/`;
     postData(url, data, csrfToken)
     .then(response => {
         if (response == 200) {
@@ -82,7 +82,7 @@ const createEmployer =()=>{
     let LastName = document.querySelector('[signup-form] #employer_last_name').value;
     let password = document.querySelector('[signup-form] #raw_password').value;
     let data = {'first_name':firstName, 'last_name': LastName, 'email':email, 'password': password};
-    const url =  `'http://{getcurrentLocation}/home/employer-signup/'`;
+    const url =  `http://${currentLocation}/home/employer-signup/`;
     postData(url, data, csrfToken)
     .then(response => {
         if(response==200){
@@ -104,7 +104,7 @@ const showSignupError =(errorField, error)=>{
 
 //is loged out
 const logout =()=>{
-    const url =  `'http://{getcurrentLocation}/home/logout/'`;
+    const url =  `http://${currentLocation}/home/logout/`;
     return fetch(url,{
         method: 'GET',
         mode: 'cors', // no-cors, cors, *same-origin
@@ -131,10 +131,10 @@ const login = () => {
     let data = {'email':email, 'password':password};
 
     //error
-    const errorField = document.querySelector('[login-container] #error-message');
-    
-
-    const url = `'http://{getcurrentLocation}/home/login/'`;
+    const errorField = document.querySelector('[login-container] #error-message');    
+    let currentLocation = getCurrentLocation();
+    const url = `http://${currentLocation}/home/login/`;
+    console.log(url);
     postData(url, data, csrfToken)
     .then(response => {
         if(response==200){

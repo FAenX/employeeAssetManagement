@@ -11,6 +11,7 @@ const getEmployeeData = () =>{
     let employeeId = target.parentNode.childNodes[3].innerText;
     let data = {'employee_id':employeeId}
     let csrfToken = document.cookie.split(';')[0].split('=')[1];
+    let currentLocation = getCurrentLocation();
     let url = `http://${currentLocation}/home/employee-info/`;
     postData(url, data, csrfToken)
     .then(response=> {
@@ -27,6 +28,7 @@ const getEmployeeAssets =() =>{
     let data = {'id':id};
     let csrfToken = document.cookie.split(';')[0].split('=')[1];
     console.log(csrfToken);
+    let currentLocation = getCurrentLocation();
     let url =  `http://${currentLocation}/home/employee-assets/`
 
     postData(url, data, csrfToken)
@@ -62,6 +64,7 @@ const createEmployee =()=>{
     let LastName = document.querySelector('[add-employee-form] #employee_last_name').value;
     let randomPassword = randomPass(10);
     let data = {'first_name':firstName, 'last_name': LastName, 'email':email, 'password': randomPassword};
+    let currentLocation = getCurrentLocation();
     const url =  `http://${currentLocation}/home/employee-signup/`;
     postData(url, data, csrfToken)
     .then(response => {
@@ -82,6 +85,7 @@ const createEmployer =()=>{
     let LastName = document.querySelector('[signup-form] #employer_last_name').value;
     let password = document.querySelector('[signup-form] #raw_password').value;
     let data = {'first_name':firstName, 'last_name': LastName, 'email':email, 'password': password};
+    let currentLocation = getCurrentLocation();
     const url =  `http://${currentLocation}/home/employer-signup/`;
     postData(url, data, csrfToken)
     .then(response => {
@@ -104,6 +108,7 @@ const showSignupError =(errorField, error)=>{
 
 //is loged out
 const logout =()=>{
+    let currentLocation = getCurrentLocation();
     const url =  `http://${currentLocation}/home/logout/`;
     return fetch(url,{
         method: 'GET',

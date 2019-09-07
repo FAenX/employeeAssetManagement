@@ -168,6 +168,7 @@ class Activate(View):
 #password reset veiw
 class PasswordRest(View):
     ''' reset user password '''
+    
 
 
 

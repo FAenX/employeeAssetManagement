@@ -89,8 +89,8 @@
 <div class="signup-form" add-employee-modal>
     <span class="close-btn">&times;</span>
     <h3 class="modal-title"> Create Employee</h3>
-    <span id="error-message"></span>
-    <form add-employee-form>{% csrf_token %}
+    <span id="error-message"></span>  
+    <form create-user>
         <label for="email_address"> Email Address</label>
         <input class="create-user-form" id="employee_email_address" name="email_address" type="text" placeholder="Email Address" required/><br>
         <label for='first_name'>First Name:</label>
@@ -98,7 +98,7 @@
         <label for='last_name'>Last Name:</label>
         <input class="create-user-form" id="employee_last_name" name="last_name" type="text" placeholder="Last Name" required/><br>
         <input id="user" style="display: none" value="{{ user.id }}"/>
-    </form>
+    </form>   
     <div submit-add-employee-button>
         <button class="button">Create Employee</button>
     </div>
@@ -137,11 +137,11 @@
             <p id="date-joined"></p>
             <p id="employee-id" style="display: block"></p>
         </div>
-        <div view-assets-button>{%csrf_token%}
+        <div view-assets-button>
             <p class="button">view assets</p> 
         </div>
         <div assigned-assets>
-            
+                        
             <div class="asset">
                 <span></span>
             </div>
